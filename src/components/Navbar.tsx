@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import logo from "../assets/logo.png";
+import { NavLink, Outlet } from "react-router-dom";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -69,35 +70,32 @@ export default function Navbar() {
           direction={"row"}
           spacing={6}
         >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-          >
-            Sign In
-          </Button>
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
+          <NavLink to="/signin">
+            <Button fontSize={"sm"} fontWeight={400}>
+              Sign In
+            </Button>
+          </NavLink>
+          <NavLink to="/signup">
+            <Button
+              display={{ base: "none", md: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"black"}
+              _hover={{
+                bg: "gray.800",
+              }}
+            >
+              Sign Up
+            </Button>
+          </NavLink>
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
+      <Outlet />
     </Box>
   );
 }
@@ -178,11 +176,11 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Profile",
+    label: "Home",
     href: "#",
   },
   {
-    label: "Post",
+    label: "Profile",
     href: "#",
   },
   {
