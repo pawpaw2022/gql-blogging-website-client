@@ -14,7 +14,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Link,
   Img,
 } from "@chakra-ui/react";
 import { useState } from "react";

@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import logo from "../assets/logo.png";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -95,7 +95,6 @@ export default function Navbar() {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
-      <Outlet />
     </Box>
   );
 }
