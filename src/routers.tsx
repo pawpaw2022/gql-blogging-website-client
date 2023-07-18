@@ -1,10 +1,11 @@
 /** @format */
 
 import { createBrowserRouter } from "react-router-dom";
-import Signin from "./components/Signin";
-import Signup from "./components/Signup";
-import Home from "./Home";
-import Posts from "./components/Posts";
+import Signin from "./components/Auth/Signin";
+import Signup from "./components/Auth/Signup";
+import Home from "./components/Root/Home";
+import Posts from "./components/Posts/Posts";
+import Profile from "./components/User/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,14 @@ export const router = createBrowserRouter([
       {
         path: "posts",
         element: <Posts />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "*",
+        element: <div>Not Found</div>,
       },
     ],
   },

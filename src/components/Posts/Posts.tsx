@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Heading, Container } from "@chakra-ui/react";
-import Post from "./Posts/Post";
+import Post from "./Post";
 
 const Posts = () => {
   return (

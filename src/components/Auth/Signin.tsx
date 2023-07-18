@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   Img,
 } from "@chakra-ui/react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
 
 export default function Signin() {

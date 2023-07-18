@@ -52,13 +52,15 @@ export default function Navbar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
-          >
-            <Img w={"100px"} objectFit="cover" src={logo} alt="logo" />
-          </Text>
+          <NavLink to="/posts">
+            <Text
+              textAlign={useBreakpointValue({ base: "center", md: "left" })}
+              fontFamily={"heading"}
+              color={useColorModeValue("gray.800", "white")}
+            >
+              <Img w={"100px"} objectFit="cover" src={logo} alt="logo" />
+            </Text>
+          </NavLink>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
@@ -182,7 +184,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Profile",
-    href: "#",
+    href: "/profile",
   },
   {
     label: "Settings",

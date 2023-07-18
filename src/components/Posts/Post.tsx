@@ -5,7 +5,6 @@ import {
   Box,
   Heading,
   Link,
-  Image,
   Text,
   HStack,
   Tag,
@@ -15,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
+import { BlogAuthor } from "./BlogAuthor";
 
 interface IBlogTags {
   tags: Array<string>;
@@ -31,27 +31,6 @@ const BlogTags: React.FC<IBlogTags> = (props) => {
           </Tag>
         );
       })}
-    </HStack>
-  );
-};
-
-interface BlogAuthorProps {
-  date: Date;
-  name: string;
-}
-
-export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
-  return (
-    <HStack marginTop="2" spacing="2" display="flex" alignItems="center">
-      <Image
-        borderRadius="full"
-        boxSize="40px"
-        src="https://100k-faces.glitch.me/random-image"
-        alt={`Avatar of ${props.name}`}
-      />
-      <Text fontWeight="medium">{props.name}</Text>
-      <Text>—</Text>
-      <Text>{props.date.toLocaleDateString()}</Text>
     </HStack>
   );
 };
