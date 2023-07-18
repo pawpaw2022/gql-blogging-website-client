@@ -12,7 +12,7 @@ import {
   useColorModeValue,
   Img,
 } from "@chakra-ui/react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const ListHeader = ({ children }: { children: ReactNode }) => {
   return (
@@ -33,13 +33,16 @@ export default function Footer() {
           templateColumns={{ sm: "1fr 1fr", md: "2fr 1fr 1fr 1fr 1fr" }}
           spacing={8}
         >
-          <Stack spacing={6}>
+          <Stack
+            spacing={6}
+            gridColumn={{ sm: "1/--", md: "1" }}
+            display={"flex"}
+            alignItems={"center"}
+          >
             <Box>
               <Img h={"60px"} objectFit="cover" src={logo} alt="logo" />
             </Box>
-            <Text fontSize={"sm"}>
-              © 2023 FaceBowl Social Media. All rights reserved
-            </Text>
+            <Text fontSize={"sm"}>© 2023 FaceBowl. All rights reserved</Text>
           </Stack>
           <Stack align={"flex-start"}>
             <ListHeader>Product</ListHeader>

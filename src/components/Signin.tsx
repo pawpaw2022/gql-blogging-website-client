@@ -31,7 +31,7 @@ export default function Signin() {
           <Img h={"50px"} objectFit="cover" src={logo} alt="logo" />
           <Heading fontSize={"4xl"}>Sign in to your account</Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
-            The next generation of social media 😍
+            to toss fun things in a bowl 😍
           </Text>
         </Stack>
         <Box

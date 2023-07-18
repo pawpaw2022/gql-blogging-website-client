@@ -17,8 +17,9 @@ import {
   Img,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import logo from "../assets/logo.png";
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import DarkModeToggle from "./DarkModeToggle";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -68,8 +69,9 @@ export default function Navbar() {
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
-          spacing={6}
+          spacing={{ base: 2, md: 6 }}
         >
+          <DarkModeToggle />
           <NavLink to="/signin">
             <Button fontSize={"sm"} fontWeight={400}>
               Sign In
@@ -176,7 +178,7 @@ interface NavItem {
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
-    href: "#",
+    href: "/posts",
   },
   {
     label: "Profile",
