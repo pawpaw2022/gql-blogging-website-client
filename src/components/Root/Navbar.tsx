@@ -180,6 +180,10 @@ interface NavItem {
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
+    href: "/home",
+  },
+  {
+    label: "Posts",
     href: "/posts",
   },
   {
@@ -188,6 +192,6 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Settings",
-    href: "#",
+    href: "/settings",
   },
 ];

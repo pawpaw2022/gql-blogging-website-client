@@ -6,12 +6,18 @@ import Signup from "./components/Auth/Signup";
 import Home from "./components/Root/Home";
 import Posts from "./components/Posts/Posts";
 import Profile from "./components/User/Profile";
+import Hero from "./components/Hero/Hero";
+import Setting from "./components/Setting/Setting";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
     children: [
+      {
+        path: "home",
+        element: <Hero />,
+      },
       {
         path: "signin",
         element: <Signin />,
@@ -27,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "settings",
+        element: <Setting />,
       },
       {
         path: "*",
