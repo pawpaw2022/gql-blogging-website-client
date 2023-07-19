@@ -1,6 +1,5 @@
 /** @format */
 
-import React from "react";
 import { Heading, Container } from "@chakra-ui/react";
 import Post from "./Post";
 

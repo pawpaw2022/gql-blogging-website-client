@@ -4,12 +4,10 @@ import {
   Container,
   Divider,
   Heading,
-  Image,
   Text,
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
 import Post from "../Posts/Post";
 import AvatarWRipple from "./Avatar";
 

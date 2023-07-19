@@ -1,38 +1,25 @@
 /** @format */
 
 import {
-  Progress,
-  Box,
   ButtonGroup,
   Button,
   Heading,
   Flex,
   FormControl,
-  GridItem,
   FormLabel,
   Input,
-  Select,
   SimpleGrid,
-  InputLeftAddon,
-  InputGroup,
   Textarea,
   FormHelperText,
-  InputRightElement,
   Container,
   VStack,
-  Img,
   Avatar,
   Text,
-  Stack,
   HStack,
 } from "@chakra-ui/react";
 import React from "react";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
-import { GiCancel, GiLog } from "react-icons/gi";
-
-const penStyle = {
-  cursor: "pointer",
-};
+import { GiCancel } from "react-icons/gi";
 
 const INFO = {
   firstName: "John",
@@ -95,9 +82,10 @@ export default function Setting() {
     setToggleEdit((prev) => !prev);
   };
 
-  const handleSave = (e: Event) => {
+  const handleSave = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     console.log("save");
+    setToggleEdit((prev) => !prev);
   };
 
   return (
