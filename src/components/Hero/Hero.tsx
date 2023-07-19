@@ -57,8 +57,8 @@ export default function Hero() {
           >
             <NavLink to={"/signin"}>
               <Button
-                bg={"black"}
-                color={"white"}
+                bg={useColorModeValue("black", "gray.300")}
+                color={useColorModeValue("white", "black")}
                 rounded={"full"}
                 px={6}
                 border={"none"}
@@ -66,8 +66,8 @@ export default function Hero() {
                   outline: "none",
                 }}
                 _hover={{
-                  bg: "gray.300",
-                  color: "black",
+                  bg: useColorModeValue("gray.300", "black"),
+                  color: useColorModeValue("black", "white"),
                 }}
               >
                 Get Started
