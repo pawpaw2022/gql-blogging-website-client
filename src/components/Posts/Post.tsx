@@ -21,6 +21,11 @@ interface IBlogTags {
   marginTop?: SpaceProps["marginTop"];
 }
 
+interface IPostProp {
+  title: string;
+  content: string;
+}
+
 const BlogTags: React.FC<IBlogTags> = (props) => {
   return (
     <HStack spacing={2} marginTop={props.marginTop}>
@@ -45,7 +50,7 @@ const commentStyle = {
   cursor: "pointer",
 };
 
-export default function Post() {
+export default function Post({ title, content }: IPostProp) {
   const [liked, setLiked] = React.useState(false);
   const [commented, setCommented] = React.useState(false);
 
@@ -69,7 +74,7 @@ export default function Post() {
         <BlogTags tags={["Engineering", "Product"]} />
         <Heading marginTop="1">
           <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-            Blog article title
+            {title}
           </Link>
         </Heading>
         <Text
@@ -78,10 +83,7 @@ export default function Post() {
           color={useColorModeValue("gray.700", "gray.200")}
           fontSize="lg"
         >
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book.
+          {content}
         </Text>
 
         <HStack justify={"space-between"} mt="2">
