@@ -17,8 +17,36 @@ import {
 } from "@chakra-ui/react";
 import logo from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { SIGN_IN } from "../../api/mutation";
+import { useMutation } from "@apollo/client";
 
 export default function Signin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [signin, { data, loading, error }] = useMutation(SIGN_IN);
+
+  if (loading) return "Signin...";
+  if (error) return `Signin error! ${error.message}`;
+
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    signin({
+      variables: {
+        email,
+        password,
+      },
+    });
+
+    // clear inputs
+    setEmail("");
+    setPassword("");
+  };
+
+  console.log(data);
+
   return (
     <Flex
       minH={"100vh"}
@@ -43,11 +71,19 @@ export default function Signin() {
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -64,6 +100,7 @@ export default function Signin() {
                 _hover={{
                   bg: "blue.500",
                 }}
+                onClick={handleSubmit}
               >
                 Sign in
               </Button>
