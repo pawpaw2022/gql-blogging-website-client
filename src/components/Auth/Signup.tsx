@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useMutation } from "@apollo/client";
 import { SIGN_UP } from "../../api/mutation";
@@ -64,11 +64,13 @@ export default function Signup() {
     setLastName("");
   };
 
-  // console.log(data);
-
   if (data?.signup.token) {
     localStorage.setItem("token", data.signup.token);
     window.location.href = "/posts";
+  }
+
+  if (localStorage?.getItem("token")) {
+    return <Navigate to="/posts" />;
   }
 
   return (

@@ -20,6 +20,7 @@ import {
 import React from "react";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { GiCancel } from "react-icons/gi";
+import { Navigate } from "react-router-dom";
 
 const INFO = {
   firstName: "John",
@@ -87,6 +88,10 @@ export default function Setting() {
     console.log("save");
     setToggleEdit((prev) => !prev);
   };
+
+  if (!localStorage?.getItem("token")) {
+    return <Navigate to="/signin" />;
+  }
 
   return (
     <Container maxW={"7xl"} p="12" minH={"80vh"}>

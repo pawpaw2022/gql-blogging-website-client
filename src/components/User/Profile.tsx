@@ -10,8 +10,13 @@ import {
 } from "@chakra-ui/react";
 import Post from "../Posts/Post";
 import AvatarWRipple from "./Avatar";
+import { Navigate } from "react-router-dom";
 
 export default function Profile() {
+  if (!localStorage?.getItem("token")) {
+    return <Navigate to="/signin" />;
+  }
+
   return (
     <Container maxW={"7xl"} p="12">
       <Heading as="h1" marginBottom={2}>

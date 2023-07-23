@@ -16,8 +16,8 @@ import {
   Img,
 } from "@chakra-ui/react";
 import logo from "../../assets/logo.png";
-import { NavLink } from "react-router-dom";
-import React, { useState } from "react";
+import { NavLink, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { SIGN_IN } from "../../api/mutation";
 import { useMutation } from "@apollo/client";
 import { AuthType } from "../../api/types";
@@ -60,6 +60,10 @@ export default function Signin() {
   if (data?.signin.token) {
     localStorage.setItem("token", data.signin.token);
     window.location.href = "/posts";
+  }
+
+  if (localStorage?.getItem("token")) {
+    return <Navigate to="/posts" />;
   }
 
   return (

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Navigate, createBrowserRouter, redirect } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import Posts from "./components/Posts/Posts";

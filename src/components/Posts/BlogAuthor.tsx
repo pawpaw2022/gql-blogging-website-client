@@ -1,6 +1,6 @@
 /** @format */
 
-import { Avatar, HStack, Image, Text } from "@chakra-ui/react";
+import { Avatar, HStack, Text } from "@chakra-ui/react";
 
 interface BlogAuthorProps {
   date: Date;
