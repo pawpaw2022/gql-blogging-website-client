@@ -49,6 +49,7 @@ export default function AvatarWRipple() {
       >
         <Avatar
           src="https://100k-faces.glitch.me/random-image"
+          name="John Doe"
           size="full"
           position="absolute"
           top={0}

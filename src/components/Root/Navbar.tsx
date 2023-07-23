@@ -15,14 +15,26 @@ import {
   useBreakpointValue,
   useDisclosure,
   Img,
+  HStack,
+  Avatar,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import DarkModeToggle from "./DarkModeToggle";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const { isOpen: isOpenAvatar, onToggle: onToggleAvatar } = useDisclosure();
+  const [isSignin, setIsSignin] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsSignin(true);
+    }
+  }, []);
 
   return (
     <Box w={"100vw"}>
@@ -74,30 +86,48 @@ export default function Navbar() {
           spacing={{ base: 2, md: 6 }}
         >
           <DarkModeToggle />
-          <NavLink to="/signin">
-            <Button fontSize={"sm"} fontWeight={400}>
-              Sign In
-            </Button>
-          </NavLink>
-          <NavLink to="/signup">
-            <Button
-              display={{ base: "none", md: "inline-flex" }}
-              fontSize={"sm"}
-              fontWeight={600}
-              color={"white"}
-              bg={"black"}
-              _hover={{
-                bg: "gray.800",
-              }}
-            >
-              Sign Up
-            </Button>
-          </NavLink>
+
+          {isSignin ? (
+            <Avatar
+              border={"2px solid"}
+              ml={2}
+              name="John Doe"
+              borderColor={useColorModeValue("gray.200", "gray.900")}
+              src="https://100k-faces.glitch.me/random-image"
+              cursor={"pointer"}
+              onClick={onToggleAvatar}
+            />
+          ) : (
+            <HStack>
+              <NavLink to="/signin">
+                <Button fontSize={"sm"} fontWeight={400}>
+                  Sign In
+                </Button>
+              </NavLink>
+              <NavLink to="/signup">
+                <Button
+                  display={{ base: "none", md: "inline-flex" }}
+                  fontSize={"sm"}
+                  fontWeight={600}
+                  color={"white"}
+                  bg={"black"}
+                  _hover={{
+                    bg: "gray.800",
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </NavLink>
+            </HStack>
+          )}
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav onToggle={onToggle} />
+      </Collapse>
+      <Collapse in={isOpenAvatar} animateOpacity>
+        <AvatarNav />
       </Collapse>
     </Box>
   );
@@ -113,19 +143,19 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? "#"}
-                fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: "none",
-                  color: linkHoverColor,
-                }}
-              >
+              <NavLink to={navItem.href ?? "#"}>
+                <Link
+                  p={2}
+                  fontSize={"sm"}
+                  fontWeight={500}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: "none",
+                    color: linkHoverColor,
+                  }}
+                ></Link>
                 {navItem.label}
-              </Link>
+              </NavLink>
             </PopoverTrigger>
           </Popover>
         </Box>
@@ -134,7 +164,7 @@ const DesktopNav = () => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ onToggle }: { onToggle: () => void }) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -142,39 +172,63 @@ const MobileNav = () => {
       display={{ md: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <MobileNavItem key={navItem.label} onToggle={onToggle} {...navItem} />
       ))}
     </Stack>
   );
 };
 
-const MobileNavItem = ({ label, href }: NavItem) => {
+const MobileNavItem = ({ label, href, onToggle }: NavItem) => {
   return (
     <Stack spacing={4}>
-      <Flex
-        py={2}
-        as={Link}
-        href={href ?? "#"}
-        justify={"space-between"}
-        align={"center"}
-        _hover={{
-          textDecoration: "none",
+      <NavLink to={href}>
+        <Flex
+          py={2}
+          justify={"space-between"}
+          align={"center"}
+          _hover={{
+            textDecoration: "none",
+          }}
+          onClick={onToggle}
+        >
+          <Text
+            fontWeight={600}
+            color={useColorModeValue("gray.600", "gray.200")}
+          >
+            {label}
+          </Text>
+        </Flex>
+      </NavLink>
+    </Stack>
+  );
+};
+
+const AvatarNav = () => {
+  return (
+    <HStack
+      bg={useColorModeValue("white", "gray.800")}
+      p={4}
+      justify={"flex-end"}
+    >
+      <Text
+        fontWeight={600}
+        color={useColorModeValue("gray.600", "gray.200")}
+        cursor={"pointer"}
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.href = "/signin";
         }}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
-          {label}
-        </Text>
-      </Flex>
-    </Stack>
+        Sign Out
+      </Text>
+    </HStack>
   );
 };
 
 interface NavItem {
   label: string;
   href: string;
+  onToggle?: () => void;
 }
 
 const NAV_ITEMS: Array<NavItem> = [

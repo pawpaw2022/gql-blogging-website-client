@@ -20,12 +20,15 @@ import { NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import { SIGN_IN } from "../../api/mutation";
 import { useMutation } from "@apollo/client";
+import { AuthType } from "../../api/types";
+import Alert from "../Widgets/Alert";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [signin, { data, loading, error }] = useMutation(SIGN_IN);
+  const [signin, { data, loading, error }] = useMutation<AuthType>(SIGN_IN);
 
   if (loading) return "Signin...";
   if (error) return `Signin error! ${error.message}`;
@@ -33,19 +36,31 @@ export default function Signin() {
   const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
-    signin({
-      variables: {
-        email,
-        password,
-      },
-    });
+    setIsLoading(true);
+
+    setTimeout(() => {
+      signin({
+        variables: {
+          email,
+          password,
+        },
+      });
+
+      setIsLoading(false);
+    }, 1000); // simulate loading
 
     // clear inputs
     setEmail("");
     setPassword("");
   };
 
-  console.log(data);
+  // token
+  // console.log(data);
+
+  if (data?.signin.token) {
+    localStorage.setItem("token", data.signin.token);
+    window.location.href = "/posts";
+  }
 
   return (
     <Flex
@@ -69,6 +84,9 @@ export default function Signin() {
           p={8}
         >
           <Stack spacing={4}>
+            {data?.signin.error && (
+              <Alert status="error" message={data?.signin.error.message} />
+            )}
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
               <Input
@@ -95,11 +113,14 @@ export default function Signin() {
                 <Link color={"blue.400"}>Forgot password?</Link>
               </Stack>
               <Button
+                as={"button"}
+                loadingText="Just a moment..."
                 bg={"blue.400"}
                 color={"white"}
                 _hover={{
                   bg: "blue.500",
                 }}
+                isLoading={isLoading}
                 onClick={handleSubmit}
               >
                 Sign in

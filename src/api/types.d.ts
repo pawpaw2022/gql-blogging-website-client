@@ -15,3 +15,19 @@ export type PostType = {
   comments: Comment[];
   likes: Like[];
 };
+
+export type AuthType = {
+  signin: {
+    error: {
+      message: string;
+    };
+    token: string;
+  };
+
+  signup: {
+    error: {
+      message: string;
+    };
+    token: string;
+  };
+};

@@ -22,6 +22,8 @@ import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useMutation } from "@apollo/client";
 import { SIGN_UP } from "../../api/mutation";
+import Alert from "../Widgets/Alert";
+import { AuthType } from "../../api/types";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +32,9 @@ export default function Signup() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [signup, { data, loading, error }] = useMutation(SIGN_UP);
+  const [signup, { data, loading, error }] = useMutation<AuthType>(SIGN_UP);
 
   if (loading) return "Signup...";
   if (error) return `Signup error! ${error.message}`;
@@ -39,14 +42,20 @@ export default function Signup() {
   const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
-    signup({
-      variables: {
-        firstName,
-        lastName,
-        email,
-        password,
-      },
-    });
+    setIsLoading(true);
+
+    setTimeout(() => {
+      signup({
+        variables: {
+          firstName,
+          lastName,
+          email,
+          password,
+        },
+      });
+
+      setIsLoading(false);
+    }, 1000); // simulate loading
 
     // clear inputs
     setEmail("");
@@ -55,7 +64,12 @@ export default function Signup() {
     setLastName("");
   };
 
-  console.log(data);
+  // console.log(data);
+
+  if (data?.signup.token) {
+    localStorage.setItem("token", data.signup.token);
+    window.location.href = "/posts";
+  }
 
   return (
     <Flex
@@ -82,6 +96,9 @@ export default function Signup() {
           p={8}
         >
           <Stack spacing={4}>
+            {data?.signup?.error.message && (
+              <Alert status="error" message={data?.signup?.error.message} />
+            )}
             <HStack>
               <Box>
                 <FormControl id="firstName" isRequired>
@@ -134,7 +151,7 @@ export default function Signup() {
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
-                loadingText="Submitting"
+                loadingText="Just a moment..."
                 size="lg"
                 bg={"blue.400"}
                 color={"white"}
@@ -142,6 +159,7 @@ export default function Signup() {
                   bg: "blue.500",
                 }}
                 onClick={handleSubmit}
+                isLoading={isLoading}
               >
                 Sign up
               </Button>

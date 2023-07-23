@@ -62,8 +62,8 @@ export default function Profile() {
           My Feeds
         </Heading>
 
-        <Post />
-        <Post />
+        {/* <Post />
+        <Post /> */}
       </VStack>
     </Container>
   );
