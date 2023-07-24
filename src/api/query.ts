@@ -5,7 +5,6 @@ import { gql } from "@apollo/client";
 export const GET_POSTS = gql`
   query {
     posts {
-      authorId
       content
       id
       likes {
@@ -16,16 +15,25 @@ export const GET_POSTS = gql`
       comments {
         content
         id
-      }
-      published
-      tags {
-        id
-        name
+        postId
+        userId
       }
       title
       user {
         firstName
+        lastName
+        profile {
+          avatar {
+            url
+          }
+        }
       }
+      authorId
+      published
+      tags {
+        name
+      }
+      updatedAt
     }
   }
 `;

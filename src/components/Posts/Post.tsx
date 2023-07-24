@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Heading,
@@ -15,15 +15,13 @@ import {
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
 import { BlogAuthor } from "./BlogAuthor";
+import { PostType } from "../../api/types";
+import { useMutation } from "@apollo/client";
+import { LIKE, UNLIKE } from "../../api/mutation";
 
 interface IBlogTags {
   tags: Array<string>;
   marginTop?: SpaceProps["marginTop"];
-}
-
-interface IPostProp {
-  title: string;
-  content: string;
 }
 
 const BlogTags: React.FC<IBlogTags> = (props) => {
@@ -50,12 +48,52 @@ const commentStyle = {
   cursor: "pointer",
 };
 
-export default function Post({ title, content }: IPostProp) {
-  const [liked, setLiked] = React.useState(false);
+export default function Post({
+  title,
+  content,
+  likes,
+  comments,
+  authorId,
+  id,
+}: PostType) {
+  const mylike = likes.find((like) => like.userId === authorId);
+  const [liked, setLiked] = React.useState(mylike ? true : false);
+  const [numLikes, setNumLikes] = React.useState(likes.length);
+  const [like] = useMutation(LIKE);
+  const [unlike] = useMutation(UNLIKE);
+
   const [commented, setCommented] = React.useState(false);
+
+  // Update the likes in the database every 10 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (liked) {
+        like({
+          variables: {
+            postId: id,
+          },
+        });
+      } else {
+        unlike({
+          variables: {
+            postId: id,
+          },
+        });
+      }
+    }, 10000); // 10000 milliseconds = 10 seconds
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [liked, id, like, unlike]);
 
   const handleLike = () => {
     setLiked((prev) => !prev);
+
+    if (liked) {
+      setNumLikes((prev) => prev - 1);
+    } else {
+      setNumLikes((prev) => prev + 1);
+    }
   };
 
   const handleComment = () => {
@@ -101,7 +139,7 @@ export default function Post({ title, content }: IPostProp) {
                 color={useColorModeValue("gray.500", "gray.300")}
                 fontSize="md"
               >
-                6
+                {numLikes}
               </Text>
             </HStack>
             <HStack>
@@ -117,7 +155,7 @@ export default function Post({ title, content }: IPostProp) {
                 color={useColorModeValue("gray.500", "gray.300")}
                 fontSize="md"
               >
-                2
+                {comments.length}
               </Text>
             </HStack>
           </HStack>

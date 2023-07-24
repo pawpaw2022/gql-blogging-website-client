@@ -5,15 +5,36 @@ export type PostsType = {
 };
 
 export type PostType = {
-  id: number;
+  id: string;
   title: string;
   content: string;
   published: boolean;
-  authorId: number;
-  user: User;
-  tags: Tag[];
-  comments: Comment[];
-  likes: Like[];
+  authorId: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    profile: {
+      avatar: {
+        url: string;
+      };
+    };
+  };
+  tags: {
+    name: string;
+  }[];
+  comments: {
+    content: string;
+    id: string;
+    postId: string;
+    userId: string;
+  }[];
+  likes: {
+    id: string;
+    postId: string;
+    userId: string;
+  }[];
+
+  updatedAt: string;
 };
 
 export type AuthType = {

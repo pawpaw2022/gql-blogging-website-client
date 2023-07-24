@@ -8,7 +8,6 @@ import {
   Button,
   Stack,
   Collapse,
-  Link,
   Popover,
   PopoverTrigger,
   useColorModeValue,
@@ -22,19 +21,11 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import DarkModeToggle from "./DarkModeToggle";
-import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isOpenAvatar, onToggle: onToggleAvatar } = useDisclosure();
-  const [isSignin, setIsSignin] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsSignin(true);
-    }
-  }, []);
+  const auth = localStorage.getItem("token");
 
   return (
     <Box w={"100vw"}>
@@ -87,7 +78,7 @@ export default function Navbar() {
         >
           <DarkModeToggle />
 
-          {isSignin ? (
+          {auth ? (
             <Avatar
               border={"2px solid"}
               ml={2}
@@ -144,7 +135,7 @@ const DesktopNav = () => {
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <NavLink to={navItem.href ?? "#"}>
-                <Link
+                <Text
                   p={2}
                   fontSize={"sm"}
                   fontWeight={500}
@@ -153,7 +144,7 @@ const DesktopNav = () => {
                     textDecoration: "none",
                     color: linkHoverColor,
                   }}
-                ></Link>
+                ></Text>
                 {navItem.label}
               </NavLink>
             </PopoverTrigger>

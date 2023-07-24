@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import logo from "../../assets/logo.png";
 import { NavLink, Navigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SIGN_IN } from "../../api/mutation";
 import { useMutation } from "@apollo/client";
 import { AuthType } from "../../api/types";

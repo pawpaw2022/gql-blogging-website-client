@@ -33,3 +33,37 @@ export const SIGN_UP = gql`
     }
   }
 `;
+
+export const LIKE = gql`
+  mutation ($postId: ID!) {
+    likePost(postId: $postId) {
+      error {
+        message
+      }
+      post {
+        likes {
+          id
+          postId
+          userId
+        }
+      }
+    }
+  }
+`;
+
+export const UNLIKE = gql`
+  mutation ($postId: ID!) {
+    unLikePost(postId: $postId) {
+      error {
+        message
+      }
+      post {
+        likes {
+          id
+          postId
+          userId
+        }
+      }
+    }
+  }
+`;

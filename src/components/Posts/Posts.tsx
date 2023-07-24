@@ -10,7 +10,7 @@ const Posts = () => {
   const { loading, error, data } = useQuery<PostsType>(GET_POSTS);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (error) return <p>Error :</p>;
 
   console.log(data);
 
@@ -21,7 +21,19 @@ const Posts = () => {
       </Heading>
 
       {data?.posts.map((post) => (
-        <Post key={post.id} title={post.title} content={post.content} />
+        <Post
+          key={post.id}
+          id={post.id}
+          authorId={post.authorId}
+          title={post.title}
+          content={post.content}
+          published={post.published}
+          updatedAt={post.updatedAt}
+          comments={post.comments}
+          likes={post.likes}
+          user={post.user}
+          tags={post.tags}
+        />
       ))}
     </Container>
   );
