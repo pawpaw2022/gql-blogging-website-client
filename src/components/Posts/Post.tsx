@@ -18,9 +18,10 @@ import {
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
 import { BlogAuthor } from "./BlogAuthor";
-import { PostType } from "../../api/types";
-import { useMutation } from "@apollo/client";
+import { MeType, PostType } from "../../api/types";
+import { useMutation, useQuery } from "@apollo/client";
 import { LIKE, UNLIKE } from "../../api/mutation";
+import { GET_ME } from "../../api/query";
 
 interface IBlogTags {
   tags: Array<string>;
@@ -56,25 +57,30 @@ export default function Post({
   content,
   likes,
   comments,
-  authorId,
   id,
   tags,
   user,
   updatedAt,
 }: PostType) {
+  const toast = useToast();
+  const { data: meData } = useQuery<MeType>(GET_ME);
+
+  // like control
+
+  // set the initial state of the like button
+  useEffect(() => {
+    if (meData?.me) {
+      const isLiked = likes.some((like) => like.userId === meData.me.id);
+      setLiked(isLiked);
+    }
+  }, [meData, likes]);
+
   const [liked, setLiked] = React.useState(false);
   const [numLikes, setNumLikes] = React.useState(likes.length);
   const [like] = useMutation(LIKE);
   const [unlike] = useMutation(UNLIKE);
 
-  // comment control
-  const { isOpen, onToggle } = useDisclosure();
-
-  // tags control
-  const tagNames = tags.map((tag) => tag.name);
-
-  const toast = useToast();
-
+  // update the like button when the user likes or unlikes a post
   const handleLike = () => {
     // check if the user is logged in
     if (!localStorage.getItem("token")) {
@@ -109,6 +115,12 @@ export default function Post({
       });
     }
   };
+
+  // comment control
+  const { isOpen, onToggle } = useDisclosure();
+
+  // tags control
+  const tagNames = tags.map((tag) => tag.name);
 
   return (
     <Box marginTop={{ base: "2", sm: "6" }}>

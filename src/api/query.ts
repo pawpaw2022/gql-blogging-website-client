@@ -51,6 +51,11 @@ export const GET_ME = gql`
   query {
     me {
       id
+      likes {
+        id
+        postId
+        userId
+      }
     }
   }
 `;

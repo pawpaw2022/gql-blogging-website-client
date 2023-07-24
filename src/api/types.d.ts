@@ -66,5 +66,10 @@ export type AuthType = {
 export type MeType = {
   me: {
     id: string;
+    likes: {
+      id: string;
+      postId: string;
+      userId: string;
+    };
   };
 };
