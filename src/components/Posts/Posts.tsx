@@ -7,12 +7,10 @@ import { PostsType } from "../../api/types";
 import { GET_POSTS } from "../../api/query";
 
 const Posts = () => {
-  const { loading, error, data } = useQuery<PostsType>(GET_POSTS);
+  const { loading, error, data: postsData } = useQuery<PostsType>(GET_POSTS);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
-
-  console.log(data?.posts);
 
   return (
     <Container maxW={"7xl"} p="12">
@@ -20,7 +18,7 @@ const Posts = () => {
         Feeds and Stories
       </Heading>
 
-      {data?.posts.map((post) => (
+      {postsData?.posts.map((post) => (
         <Post
           key={post.id}
           id={post.id}

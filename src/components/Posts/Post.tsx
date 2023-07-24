@@ -11,6 +11,9 @@ import {
   SpaceProps,
   useColorModeValue,
   Divider,
+  useDisclosure,
+  Collapse,
+  useToast,
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
@@ -59,50 +62,52 @@ export default function Post({
   user,
   updatedAt,
 }: PostType) {
-  const mylike = likes.find((like) => like.userId === authorId);
-  const [liked, setLiked] = React.useState(mylike ? true : false);
+  const [liked, setLiked] = React.useState(false);
   const [numLikes, setNumLikes] = React.useState(likes.length);
   const [like] = useMutation(LIKE);
   const [unlike] = useMutation(UNLIKE);
 
-  const [commented, setCommented] = React.useState(false);
+  // comment control
+  const { isOpen, onToggle } = useDisclosure();
 
+  // tags control
   const tagNames = tags.map((tag) => tag.name);
 
-  // Update the likes in the database every 10 seconds
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (liked) {
-        like({
-          variables: {
-            postId: id,
-          },
-        });
-      } else {
-        unlike({
-          variables: {
-            postId: id,
-          },
-        });
-      }
-    }, 10000); // 10000 milliseconds = 10 seconds
-
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, [liked, id, like, unlike]);
+  const toast = useToast();
 
   const handleLike = () => {
+    // check if the user is logged in
+    if (!localStorage.getItem("token")) {
+      toast({
+        position: "top",
+        title: "Invalid action",
+        description: "You must be logged in to like a post.",
+        status: "error",
+        duration: 9000, // 9 seconds
+        isClosable: true,
+      });
+      return;
+    }
+
     setLiked((prev) => !prev);
 
     if (liked) {
       setNumLikes((prev) => prev - 1);
+
+      unlike({
+        variables: {
+          postId: id,
+        },
+      });
     } else {
       setNumLikes((prev) => prev + 1);
-    }
-  };
 
-  const handleComment = () => {
-    setCommented((prev) => !prev);
+      like({
+        variables: {
+          postId: id,
+        },
+      });
+    }
   };
 
   return (
@@ -148,8 +153,8 @@ export default function Post({
               </Text>
             </HStack>
             <HStack>
-              <Box onClick={handleComment}>
-                {commented ? (
+              <Box onClick={onToggle}>
+                {isOpen ? (
                   <FaComments size={30} style={commentStyle} />
                 ) : (
                   <FaRegComments size={30} style={commentStyle} />
@@ -166,10 +171,34 @@ export default function Post({
           </HStack>
           <BlogAuthor
             name={user.firstName + " " + user.lastName}
-            date={new Date(Date.parse(updatedAt))}
+            date={new Date(updatedAt)}
             avatarUrl={user.profile.avatar.url}
           />
         </HStack>
+        <Collapse in={isOpen} animateOpacity>
+          <Divider marginTop="21px" />
+          <Box marginTop="21px">
+            {comments?.map((comment) => (
+              <HStack key={comment.id} justify={"space-between"}>
+                <Text
+                  as="p"
+                  marginTop="2"
+                  color={useColorModeValue("gray.700", "gray.200")}
+                  fontSize="lg"
+                >
+                  {comment.content}
+                </Text>
+
+                <BlogAuthor
+                  key={comment.id}
+                  name={comment.user.firstName + " " + comment.user.lastName}
+                  date={new Date(Date.parse(comment.updatedAt))}
+                  avatarUrl={comment.user.profile.avatar.url}
+                />
+              </HStack>
+            ))}
+          </Box>
+        </Collapse>
         <Divider marginTop="21px" />
       </Box>
     </Box>

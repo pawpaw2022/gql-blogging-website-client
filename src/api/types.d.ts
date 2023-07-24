@@ -27,6 +27,16 @@ export type PostType = {
     id: string;
     postId: string;
     userId: string;
+    updatedAt: string;
+    user: {
+      firstName: string;
+      lastName: string;
+      profile: {
+        avatar: {
+          url: string;
+        };
+      };
+    };
   }[];
   likes: {
     id: string;
@@ -50,5 +60,11 @@ export type AuthType = {
       message: string;
     };
     token: string;
+  };
+};
+
+export type MeType = {
+  me: {
+    id: string;
   };
 };

@@ -16,7 +16,16 @@ export const GET_POSTS = gql`
         content
         id
         postId
-        userId
+        updatedAt
+        user {
+          firstName
+          lastName
+          profile {
+            avatar {
+              url
+            }
+          }
+        }
       }
       title
       user {
@@ -34,6 +43,14 @@ export const GET_POSTS = gql`
         name
       }
       updatedAt
+    }
+  }
+`;
+
+export const GET_ME = gql`
+  query {
+    me {
+      id
     }
   }
 `;
