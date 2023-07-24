@@ -5,6 +5,7 @@ import { Avatar, HStack, Text } from "@chakra-ui/react";
 interface BlogAuthorProps {
   date: Date;
   name: string;
+  avatarUrl: string;
 }
 
 export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
@@ -13,8 +14,8 @@ export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
       <Avatar
         borderRadius="full"
         boxSize="40px"
-        name="John Doe"
-        src="https://100k-faces.glitch.me/random-image"
+        name={props.name}
+        src={props.avatarUrl}
       />
       <Text fontWeight="medium">{props.name}</Text>
       <Text>—</Text>

@@ -12,7 +12,7 @@ const Posts = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
 
-  console.log(data);
+  console.log(data?.posts);
 
   return (
     <Container maxW={"7xl"} p="12">

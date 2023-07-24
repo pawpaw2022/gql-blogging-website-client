@@ -55,6 +55,9 @@ export default function Post({
   comments,
   authorId,
   id,
+  tags,
+  user,
+  updatedAt,
 }: PostType) {
   const mylike = likes.find((like) => like.userId === authorId);
   const [liked, setLiked] = React.useState(mylike ? true : false);
@@ -63,6 +66,8 @@ export default function Post({
   const [unlike] = useMutation(UNLIKE);
 
   const [commented, setCommented] = React.useState(false);
+
+  const tagNames = tags.map((tag) => tag.name);
 
   // Update the likes in the database every 10 seconds
   useEffect(() => {
@@ -109,7 +114,7 @@ export default function Post({
         justifyContent="center"
         marginTop={{ base: "3", sm: "0" }}
       >
-        <BlogTags tags={["Engineering", "Product"]} />
+        <BlogTags tags={tagNames} />
         <Heading marginTop="1">
           <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
             {title}
@@ -159,7 +164,11 @@ export default function Post({
               </Text>
             </HStack>
           </HStack>
-          <BlogAuthor name="John Doe" date={new Date("2021-04-06T19:01:27Z")} />
+          <BlogAuthor
+            name={user.firstName + " " + user.lastName}
+            date={new Date(Date.parse(updatedAt))}
+            avatarUrl={user.profile.avatar.url}
+          />
         </HStack>
         <Divider marginTop="21px" />
       </Box>

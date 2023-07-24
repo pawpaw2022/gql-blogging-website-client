@@ -54,7 +54,11 @@ export default function Navbar() {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex
+          flex={{ base: 1 }}
+          justify={{ base: "center", md: "start" }}
+          align={"center"}
+        >
           <NavLink to="/posts">
             <Text
               textAlign={useBreakpointValue({ base: "center", md: "left" })}
@@ -137,15 +141,16 @@ const DesktopNav = () => {
               <NavLink to={navItem.href ?? "#"}>
                 <Text
                   p={2}
-                  fontSize={"sm"}
+                  fontSize={"md"}
                   fontWeight={500}
                   color={linkColor}
                   _hover={{
                     textDecoration: "none",
                     color: linkHoverColor,
                   }}
-                ></Text>
-                {navItem.label}
+                >
+                  {navItem.label}
+                </Text>
               </NavLink>
             </PopoverTrigger>
           </Popover>
