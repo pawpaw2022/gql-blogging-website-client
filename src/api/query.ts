@@ -16,6 +16,7 @@ export const GET_POSTS = gql`
         content
         id
         postId
+        userId
         updatedAt
         user {
           firstName
@@ -47,15 +48,10 @@ export const GET_POSTS = gql`
   }
 `;
 
-export const GET_ME = gql`
+export const GET_ME_ID = gql`
   query {
     me {
       id
-      likes {
-        id
-        postId
-        userId
-      }
     }
   }
 `;

@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Heading,
@@ -17,11 +17,11 @@ import {
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
+
 import { BlogAuthor } from "./BlogAuthor";
-import { MeType, PostType } from "../../api/types";
-import { useMutation, useQuery } from "@apollo/client";
-import { LIKE, UNLIKE } from "../../api/mutation";
-import { GET_ME } from "../../api/query";
+import { PostType } from "../../api/types";
+import { useLike } from "./Hooks/useLike";
+import Comments from "./Comments";
 
 interface IBlogTags {
   tags: Array<string>;
@@ -63,61 +63,13 @@ export default function Post({
   updatedAt,
 }: PostType) {
   const toast = useToast();
-  const { data: meData } = useQuery<MeType>(GET_ME);
 
   // like control
-
-  // set the initial state of the like button
-  useEffect(() => {
-    if (meData?.me) {
-      const isLiked = likes.some((like) => like.userId === meData.me.id);
-      setLiked(isLiked);
-    }
-  }, [meData, likes]);
-
-  const [liked, setLiked] = React.useState(false);
-  const [numLikes, setNumLikes] = React.useState(likes.length);
-  const [like] = useMutation(LIKE);
-  const [unlike] = useMutation(UNLIKE);
-
-  // update the like button when the user likes or unlikes a post
-  const handleLike = () => {
-    // check if the user is logged in
-    if (!localStorage.getItem("token")) {
-      toast({
-        position: "top",
-        title: "Invalid action",
-        description: "You must be logged in to like a post.",
-        status: "error",
-        duration: 9000, // 9 seconds
-        isClosable: true,
-      });
-      return;
-    }
-
-    setLiked((prev) => !prev);
-
-    if (liked) {
-      setNumLikes((prev) => prev - 1);
-
-      unlike({
-        variables: {
-          postId: id,
-        },
-      });
-    } else {
-      setNumLikes((prev) => prev + 1);
-
-      like({
-        variables: {
-          postId: id,
-        },
-      });
-    }
-  };
+  const { handleLike, liked, numLikes } = useLike(likes, id, toast);
 
   // comment control
   const { isOpen, onToggle } = useDisclosure();
+  const [numComments, setNumComments] = React.useState(comments.length);
 
   // tags control
   const tagNames = tags.map((tag) => tag.name);
@@ -177,7 +129,7 @@ export default function Post({
                 color={useColorModeValue("gray.500", "gray.300")}
                 fontSize="md"
               >
-                {comments.length}
+                {numComments}
               </Text>
             </HStack>
           </HStack>
@@ -188,28 +140,12 @@ export default function Post({
           />
         </HStack>
         <Collapse in={isOpen} animateOpacity>
-          <Divider marginTop="21px" />
-          <Box marginTop="21px">
-            {comments?.map((comment) => (
-              <HStack key={comment.id} justify={"space-between"}>
-                <Text
-                  as="p"
-                  marginTop="2"
-                  color={useColorModeValue("gray.700", "gray.200")}
-                  fontSize="lg"
-                >
-                  {comment.content}
-                </Text>
-
-                <BlogAuthor
-                  key={comment.id}
-                  name={comment.user.firstName + " " + comment.user.lastName}
-                  date={new Date(Date.parse(comment.updatedAt))}
-                  avatarUrl={comment.user.profile.avatar.url}
-                />
-              </HStack>
-            ))}
-          </Box>
+          <Comments
+            comments={comments}
+            toast={toast}
+            id={id}
+            setNumComments={setNumComments}
+          />
         </Collapse>
         <Divider marginTop="21px" />
       </Box>

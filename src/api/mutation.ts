@@ -67,3 +67,42 @@ export const UNLIKE = gql`
     }
   }
 `;
+
+export const ADDCOMMENT = gql`
+  mutation ($postId: ID!, $content: String!) {
+    createComment(postId: $postId, content: $content) {
+      error {
+        message
+      }
+      comment {
+        content
+        id
+        postId
+        userId
+        updatedAt
+        user {
+          firstName
+          lastName
+          profile {
+            avatar {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const DELETECOMMENT = gql`
+  mutation ($commentId: ID!) {
+    deleteComment(commentId: $commentId) {
+      error {
+        message
+      }
+      comment {
+        id
+      }
+    }
+  }
+`;
