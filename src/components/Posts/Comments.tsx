@@ -11,9 +11,10 @@ import {
 import { BsFillSendFill, BsSend } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { ADDCOMMENT } from "../../api/mutation";
+import { ADDCOMMENT, DELETECOMMENT } from "../../api/mutation";
 import { CommentType } from "../../api/types";
 import Comment from "./Comment";
+import { toastToast } from "./Hooks/useToast";
 
 const sendStyle = {
   color: "dodgerblue",
@@ -50,14 +51,35 @@ export default function Comments({
   id: postId,
   setNumComments,
 }: Props) {
-  const [addComment, { data }] = useMutation<CommentType>(ADDCOMMENT);
+  const [addComment, { data: addData }] = useMutation<CommentType>(ADDCOMMENT);
+  const [deleteComment, { data: deleteData }] =
+    useMutation<CommentType>(DELETECOMMENT);
 
   // update the comments when the user adds a new comment
   useEffect(() => {
-    if (data?.createComment.comment) {
-      setUiComments((prev) => [data.createComment.comment, ...prev]);
+    if (addData?.createComment.comment) {
+      setUiComments((prev) => [addData.createComment.comment, ...prev]);
+      toastToast({
+        toast,
+        title: "Comment added",
+        description: "Your comment has been added.",
+        status: "success",
+      });
     }
-  }, [data?.createComment.comment]);
+  }, [addData?.createComment.comment]);
+
+  useEffect(() => {
+    if (deleteData?.deleteComment.comment) {
+      if (deleteData?.deleteComment.comment) {
+        toastToast({
+          toast,
+          title: "Comment deleted",
+          description: "Your comment has been deleted.",
+          status: "success",
+        });
+      }
+    }
+  }, [deleteData?.deleteComment.comment]);
 
   const [uiComments, setUiComments] = useState(comments);
   const [hoverSend, setHoverSend] = useState(false);
@@ -68,13 +90,11 @@ export default function Comments({
 
     // check if the user is logged in
     if (!localStorage.getItem("token")) {
-      toast({
-        position: "top",
+      toastToast({
+        toast,
         title: "Invalid action",
         description: "You must be logged in to comment a post.",
         status: "error",
-        duration: 9000, // 9 seconds
-        isClosable: true,
       });
 
       setCommentInput("");
@@ -83,13 +103,11 @@ export default function Comments({
 
     // check if the comment is empty
     if (commentInput.trim() === "") {
-      toast({
-        position: "top",
-        title: "Empty comment",
+      toastToast({
+        toast,
+        title: "Invalid action",
         description: "You must write something to comment a post.",
-        status: "warning",
-        duration: 9000, // 9 seconds
-        isClosable: true,
+        status: "error",
       });
 
       setCommentInput("");
@@ -108,27 +126,7 @@ export default function Comments({
     setNumComments((prev) => prev + 1);
 
     setCommentInput("");
-
-    toast({
-      position: "top",
-      title: "Comment added",
-      description: "Your comment has been added.",
-      status: "success",
-      duration: 9000, // 9 seconds
-      isClosable: true,
-    });
   };
-
-  if (data?.createComment.error) {
-    toast({
-      position: "top",
-      title: "Error",
-      description: data.createComment.error.message,
-      status: "error",
-      duration: 9000, // 9 seconds
-      isClosable: true,
-    });
-  }
 
   return (
     <>
@@ -162,7 +160,7 @@ export default function Comments({
               key={comment.id}
               setUiComments={setUiComments}
               setNumComments={setNumComments}
-              toast={toast}
+              deleteComment={deleteComment}
             />
           ))}
         </Box>

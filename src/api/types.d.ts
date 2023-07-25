@@ -96,4 +96,25 @@ export type CommentType = {
       };
     };
   };
+  deleteComment: {
+    error: {
+      message: string;
+    };
+    comment: {
+      content: string;
+      id: string;
+      postId: string;
+      userId: string;
+      updatedAt: string;
+      user: {
+        firstName: string;
+        lastName: string;
+        profile: {
+          avatar: {
+            url: string;
+          };
+        };
+      };
+    };
+  };
 };

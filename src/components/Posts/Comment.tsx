@@ -26,10 +26,9 @@ import {
 } from "react-icons/ri";
 import { BlogAuthor } from "./BlogAuthor";
 import { useState } from "react";
-import { CommentType, MeType } from "../../api/types";
+import { MeType } from "../../api/types";
 import { GET_ME_ID } from "../../api/query";
-import { useMutation, useQuery } from "@apollo/client";
-import { DELETECOMMENT } from "../../api/mutation";
+import { useQuery } from "@apollo/client";
 
 type Props = {
   comment: {
@@ -72,7 +71,11 @@ type Props = {
 
   setNumComments: React.Dispatch<React.SetStateAction<number>>;
 
-  toast: any;
+  deleteComment: (options?: {
+    variables?: {
+      commentId: string;
+    };
+  }) => Promise<any>;
 };
 
 const deleteStyle = {
@@ -83,10 +86,9 @@ export default function Comment({
   comment,
   setUiComments,
   setNumComments,
-  toast,
+  deleteComment,
 }: Props) {
   const { data: meData } = useQuery<MeType>(GET_ME_ID);
-  const [deleteComment] = useMutation<CommentType>(DELETECOMMENT);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // check if the user owns the comment
@@ -107,15 +109,6 @@ export default function Comment({
       variables: {
         commentId: comment.id,
       },
-    });
-
-    toast({
-      position: "top",
-      title: "Comment deleted",
-      description: "Your comment has been deleted.",
-      status: "success",
-      duration: 9000, // 9 seconds
-      isClosable: true,
     });
   };
 

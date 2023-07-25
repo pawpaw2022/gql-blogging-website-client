@@ -5,6 +5,7 @@ import { MeType } from "../../../api/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { LIKE, UNLIKE } from "../../../api/mutation";
 import { GET_ME_ID } from "../../../api/query";
+import { toastToast } from "./useToast";
 
 interface LikeType {
   id: string;
@@ -33,13 +34,11 @@ export const useLike = (likes: LikeType[], id: string, toast: any) => {
   const handleLike = () => {
     // check if the user is logged in
     if (!localStorage.getItem("token")) {
-      toast({
-        position: "top",
+      toastToast({
         title: "Invalid action",
-        description: "You must be logged in to like a post.",
         status: "error",
-        duration: 9000, // 9 seconds
-        isClosable: true,
+        description: "You must be logged in to like a post",
+        toast,
       });
       return;
     }
