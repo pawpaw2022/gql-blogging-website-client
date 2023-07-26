@@ -3,7 +3,14 @@
 import {
   Box,
   Button,
+  ButtonGroup,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  EditableTextarea,
+  Flex,
   HStack,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -16,6 +23,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useEditableControls,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -29,6 +37,7 @@ import { useState } from "react";
 import { MeType } from "../../api/types";
 import { GET_ME_ID } from "../../api/query";
 import { useQuery } from "@apollo/client";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 type Props = {
   comment: {
@@ -114,69 +123,88 @@ export default function Comment({
 
   // edit the comment
   const [hoverEdit, setHoverEdit] = useState(false);
-  const [content, setContent] = useState(comment.content);
-  const [editting, setEditting] = useState(false);
   const handleEdit = () => {
     console.log("edit");
-    setEditting((prev) => !prev);
   };
+
+  //   const { isEditing } = useEditableControls();
+
+  //   console.log(isEditing);
+
+  function EditableControls() {
+    const {
+      isEditing,
+      getSubmitButtonProps,
+      getCancelButtonProps,
+      getEditButtonProps,
+    } = useEditableControls();
+
+    return isEditing ? (
+      <ButtonGroup justifyContent="center" ml="2">
+        <IconButton
+          colorScheme="teal"
+          variant="ghost"
+          aria-label="submit edit"
+          icon={<AiOutlineCheck {...getSubmitButtonProps()} size={25} />}
+        />
+        <IconButton
+          colorScheme="pink"
+          variant="ghost"
+          aria-label="cancel edit"
+          icon={<AiOutlineClose {...getCancelButtonProps()} size={25} />}
+        />
+      </ButtonGroup>
+    ) : (
+      <HStack>
+        <IconButton
+          colorScheme="teal"
+          variant="ghost"
+          aria-label=" edit"
+          icon={<RiEditBoxLine {...getEditButtonProps()} size={25} />}
+        />
+
+        <IconButton
+          colorScheme="pink"
+          variant="ghost"
+          aria-label="delete edit"
+          onClick={onOpen}
+          icon={<RiDeleteBin6Line {...getCancelButtonProps()} size={25} />}
+        />
+      </HStack>
+    );
+  }
 
   return (
     <>
       <HStack justify={"space-between"}>
-        {editting ? (
-          <InputGroup size={{ base: "sm", sm: "md" }}>
-            <Input
-              pr="4.5rem"
-              placeholder="Editting comment..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-            <InputRightElement>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-            </InputRightElement>
-          </InputGroup>
+        {owned ? (
+          <HStack justify={"space-between"} w="full">
+            <Editable
+              defaultValue={comment.content}
+              display={"flex"}
+              justifyContent={"space-between"}
+              fontSize={{ base: "sm", sm: "md" }}
+              w="full"
+            >
+              <HStack w={"full"}>
+                <EditablePreview />
+                <Input as={EditableTextarea} />
+              </HStack>
+              <EditableControls />
+            </Editable>
+          </HStack>
         ) : (
           <Text as="p" marginTop="2" fontSize={{ base: "sm", sm: "md" }}>
-            {content}
+            {comment.content}
           </Text>
         )}
-        <HStack spacing={4}>
-          {owned && !editting && (
-            <HStack>
-              <Box
-                onMouseEnter={() => setHoverEdit(true)}
-                onMouseLeave={() => setHoverEdit(false)}
-                onClick={handleEdit}
-              >
-                {hoverEdit ? (
-                  <RiEditBoxFill style={deleteStyle} size={25} />
-                ) : (
-                  <RiEditBoxLine style={deleteStyle} size={25} />
-                )}
-              </Box>
-              <Box
-                onMouseEnter={() => setHoverDelete(true)}
-                onMouseLeave={() => setHoverDelete(false)}
-                onClick={onOpen}
-              >
-                {hoverDelete ? (
-                  <RiDeleteBin6Fill style={deleteStyle} size={25} />
-                ) : (
-                  <RiDeleteBin6Line style={deleteStyle} size={25} />
-                )}
-              </Box>
-            </HStack>
-          )}
-          <BlogAuthor
-            key={comment.id}
-            name={comment.user.firstName + " " + comment.user.lastName}
-            date={new Date(Date.parse(comment.updatedAt))}
-            avatarUrl={comment.user.profile.avatar.url}
-          />
-        </HStack>
+
+        <BlogAuthor
+          key={comment.id}
+          name={comment.user.firstName + " " + comment.user.lastName}
+          date={new Date(Date.parse(comment.updatedAt))}
+          avatarUrl={comment.user.profile.avatar.url}
+        />
       </HStack>
       <Modal
         isCentered

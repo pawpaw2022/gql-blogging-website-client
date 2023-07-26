@@ -4,22 +4,18 @@ import {
   Box,
   Container,
   Divider,
-  Input,
+  IconButton,
   InputGroup,
   InputRightElement,
+  Textarea,
 } from "@chakra-ui/react";
-import { BsFillSendFill, BsSend } from "react-icons/bs";
+import { BsFillSendFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADDCOMMENT, DELETECOMMENT } from "../../api/mutation";
 import { CommentType } from "../../api/types";
 import Comment from "./Comment";
 import { toastToast } from "./Hooks/useToast";
-
-const sendStyle = {
-  color: "dodgerblue",
-  cursor: "pointer",
-};
 
 type Props = {
   id: string;
@@ -82,7 +78,6 @@ export default function Comments({
   }, [deleteData?.deleteComment.comment]);
 
   const [uiComments, setUiComments] = useState(comments);
-  const [hoverSend, setHoverSend] = useState(false);
   const [commentInput, setCommentInput] = useState("");
 
   const handleSend = (e: React.MouseEvent<HTMLElement>) => {
@@ -133,24 +128,20 @@ export default function Comments({
       <Divider my="21px" />
       <Container ml={0}>
         <InputGroup size="lg">
-          <Input
+          <Textarea
             pr="4.5rem"
             placeholder="Say something about it..."
             value={commentInput}
             onChange={(e) => setCommentInput(e.target.value)}
           />
           <InputRightElement>
-            <Box
-              onMouseEnter={() => setHoverSend(true)}
-              onMouseLeave={() => setHoverSend(false)}
+            <IconButton
+              colorScheme="linkedin"
+              variant="ghost"
+              aria-label="submit edit"
               onClick={handleSend}
-            >
-              {hoverSend ? (
-                <BsFillSendFill style={sendStyle} size={25} />
-              ) : (
-                <BsSend style={sendStyle} size={25} />
-              )}
-            </Box>
+              icon={<BsFillSendFill size={25} />}
+            />
           </InputRightElement>
         </InputGroup>
         <Box marginTop="21px">
