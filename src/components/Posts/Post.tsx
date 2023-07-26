@@ -75,80 +75,80 @@ export default function Post({
   const tagNames = tags.map((tag) => tag.name);
 
   return (
-    <Box marginTop={{ base: "2", sm: "6" }}>
-      <Box
-        display="flex"
-        flex="1"
-        flexDirection="column"
-        justifyContent="center"
-        marginTop={{ base: "3", sm: "0" }}
+    <Box
+      display="flex"
+      flex="1"
+      flexDirection="column"
+      justifyContent="center"
+      marginTop={{ base: "3", sm: "0" }}
+    >
+      <BlogTags tags={tagNames} />
+      <Heading marginTop="1">
+        <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
+          {title}
+        </Link>
+      </Heading>
+      <Text
+        as="p"
+        marginTop="2"
+        color={useColorModeValue("gray.700", "gray.200")}
+        fontSize="lg"
       >
-        <BlogTags tags={tagNames} />
-        <Heading marginTop="1">
-          <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-            {title}
-          </Link>
-        </Heading>
-        <Text
-          as="p"
-          marginTop="2"
-          color={useColorModeValue("gray.700", "gray.200")}
-          fontSize="lg"
-        >
-          {content}
-        </Text>
+        {content}
+      </Text>
 
-        <HStack justify={"space-between"} mt="2">
-          <HStack>
-            <HStack mr="4">
-              <Box onClick={handleLike}>
-                {liked ? (
-                  <AiFillHeart style={heartStyle} size={30} />
-                ) : (
-                  <AiOutlineHeart style={heartStyle} size={30} />
-                )}
-              </Box>
-              <Text
-                as="p"
-                color={useColorModeValue("gray.500", "gray.300")}
-                fontSize="md"
-              >
-                {numLikes}
-              </Text>
-            </HStack>
-            <HStack>
-              <Box onClick={onToggle}>
-                {isOpen ? (
-                  <FaComments size={30} style={commentStyle} />
-                ) : (
-                  <FaRegComments size={30} style={commentStyle} />
-                )}
-              </Box>
-              <Text
-                as="p"
-                color={useColorModeValue("gray.500", "gray.300")}
-                fontSize="md"
-              >
-                {numComments}
-              </Text>
-            </HStack>
+      <HStack justify={"space-between"} mt="2">
+        <HStack>
+          <HStack mr="4">
+            <Box onClick={handleLike}>
+              {liked ? (
+                <AiFillHeart style={heartStyle} size={30} />
+              ) : (
+                <AiOutlineHeart style={heartStyle} size={30} />
+              )}
+            </Box>
+            <Text
+              as="p"
+              color={useColorModeValue("gray.500", "gray.300")}
+              fontSize="md"
+            >
+              {numLikes}
+            </Text>
           </HStack>
-          <BlogAuthor
-            name={user.firstName + " " + user.lastName}
-            date={new Date(updatedAt)}
-            avatarUrl={user.profile.avatar.url}
-          />
+          <HStack>
+            <Box onClick={onToggle}>
+              {isOpen ? (
+                <FaComments size={30} style={commentStyle} />
+              ) : (
+                <FaRegComments size={30} style={commentStyle} />
+              )}
+            </Box>
+            <Text
+              as="p"
+              color={useColorModeValue("gray.500", "gray.300")}
+              fontSize="md"
+            >
+              {numComments}
+            </Text>
+          </HStack>
         </HStack>
-        <Collapse in={isOpen} animateOpacity>
+        <BlogAuthor
+          name={user.firstName + " " + user.lastName}
+          date={new Date(updatedAt)}
+          avatarUrl={user.profile.avatar.url}
+        />
+      </HStack>
+      <Collapse in={isOpen} animateOpacity>
+        <Box w={{ base: "full", md: "auto" }}>
           <Comments
             comments={comments}
             toast={toast}
             id={id}
             setNumComments={setNumComments}
           />
-        </Collapse>
-        <Divider marginTop="21px" />
-      </Box>
+        </Box>
+      </Collapse>
+      <Divider marginTop="21px" />
     </Box>
   );
 }

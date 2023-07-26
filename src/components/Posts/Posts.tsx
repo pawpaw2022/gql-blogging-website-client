@@ -13,7 +13,7 @@ const Posts = () => {
   if (error) return <p>Error :</p>;
 
   return (
-    <Container maxW={"7xl"} p="12">
+    <Container maxW={"6xl"} p={{ sm: 2, md: 4, lg: 7 }}>
       <Heading as="h1" marginBottom="2rem">
         Feeds and Stories
       </Heading>

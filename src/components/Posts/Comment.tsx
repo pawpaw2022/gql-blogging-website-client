@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+  Avatar,
   Box,
   Button,
   ButtonGroup,
@@ -162,7 +163,7 @@ export default function Comment({
 
   return (
     <>
-      <HStack justify={"space-between"}>
+      <HStack justify={"space-between"} my={2}>
         {owned ? (
           <HStack justify={"space-between"} w="full">
             <Editable
@@ -176,26 +177,31 @@ export default function Comment({
               fontSize={{ base: "sm", sm: "md" }}
               w="full"
             >
-              <HStack w={"full"}>
-                <EditablePreview />
-
-                <Input as={EditableTextarea} />
+              <HStack maxW={{ base: "20ch", md: "30ch", lg: "40ch" }}>
+                <EditablePreview overflowX={"auto"} />
+                <Input as={EditableTextarea} py={6} w={"full"} />
               </HStack>
 
               <EditableControls onOpen={onOpen} />
             </Editable>
           </HStack>
         ) : (
-          <Text as="p" marginTop="2" fontSize={{ base: "sm", sm: "md" }}>
+          <Text
+            as="p"
+            marginTop="2"
+            fontSize={{ base: "sm", sm: "md" }}
+            maxW={{ base: "20ch", md: "30ch", lg: "40ch" }}
+            overflowX={"auto"}
+          >
             {comment.content}
           </Text>
         )}
 
-        <BlogAuthor
-          key={comment.id}
+        <Avatar
+          src={comment.user.profile.avatar.url}
           name={comment.user.firstName + " " + comment.user.lastName}
-          date={new Date(Date.parse(comment.updatedAt))}
-          avatarUrl={comment.user.profile.avatar.url}
+          top={0}
+          size={{ base: "sm", md: "md" }}
         />
       </HStack>
       <Modal

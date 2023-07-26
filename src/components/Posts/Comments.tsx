@@ -141,8 +141,8 @@ export default function Comments({
   return (
     <>
       <Divider my="21px" />
-      <Container ml={0}>
-        <InputGroup size="lg">
+      <Container ml="0" w={{ base: "100%", md: "auto" }}>
+        <InputGroup size={{ base: "sm", md: "md", lg: "lg" }}>
           <Textarea
             pr="4.5rem"
             placeholder="Say something about it..."
