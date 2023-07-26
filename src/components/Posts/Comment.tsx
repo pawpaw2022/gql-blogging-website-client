@@ -10,7 +10,6 @@ import {
   EditableTextarea,
   Flex,
   HStack,
-  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -38,6 +37,10 @@ import { MeType } from "../../api/types";
 import { GET_ME_ID } from "../../api/query";
 import { useQuery } from "@apollo/client";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { EditableControls } from "./EditableControls";
+import { IconButton } from "@chakra-ui/react";
+import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { toastToast } from "./Hooks/useToast";
 
 type Props = {
   comment: {
@@ -80,15 +83,20 @@ type Props = {
 
   setNumComments: React.Dispatch<React.SetStateAction<number>>;
 
+  updateComment: (options?: {
+    variables?: {
+      commentId: string;
+      content: string;
+    };
+  }) => Promise<any>;
+
   deleteComment: (options?: {
     variables?: {
       commentId: string;
     };
   }) => Promise<any>;
-};
 
-const deleteStyle = {
-  cursor: "pointer",
+  toast: any;
 };
 
 export default function Comment({
@@ -96,6 +104,8 @@ export default function Comment({
   setUiComments,
   setNumComments,
   deleteComment,
+  updateComment,
+  toast,
 }: Props) {
   const { data: meData } = useQuery<MeType>(GET_ME_ID);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -109,7 +119,6 @@ export default function Comment({
   }
 
   // delete the comment
-  const [hoverDelete, setHoverDelete] = useState(false);
   const handleDelete = () => {
     setUiComments((prev) => prev.filter((c) => c.id !== comment.id));
     setNumComments((prev) => prev - 1);
@@ -122,57 +131,34 @@ export default function Comment({
   };
 
   // edit the comment
-  const [hoverEdit, setHoverEdit] = useState(false);
-  const handleEdit = () => {
-    console.log("edit");
+  const originalComment = comment.content;
+  const [uiComment, setUiComment] = useState(originalComment);
+
+  const handleEditSubmit = () => {
+    const stale = uiComment !== originalComment;
+
+    if (stale) {
+      // check if comment is empty
+      if (uiComment === "") {
+        toastToast({
+          title: "No Empty",
+          status: "error",
+          description: "Comment cannot be empty",
+          toast,
+        });
+
+        return;
+      }
+
+      // update to database
+      updateComment({
+        variables: {
+          commentId: comment.id,
+          content: uiComment,
+        },
+      });
+    }
   };
-
-  //   const { isEditing } = useEditableControls();
-
-  //   console.log(isEditing);
-
-  function EditableControls() {
-    const {
-      isEditing,
-      getSubmitButtonProps,
-      getCancelButtonProps,
-      getEditButtonProps,
-    } = useEditableControls();
-
-    return isEditing ? (
-      <ButtonGroup justifyContent="center" ml="2">
-        <IconButton
-          colorScheme="teal"
-          variant="ghost"
-          aria-label="submit edit"
-          icon={<AiOutlineCheck {...getSubmitButtonProps()} size={25} />}
-        />
-        <IconButton
-          colorScheme="pink"
-          variant="ghost"
-          aria-label="cancel edit"
-          icon={<AiOutlineClose {...getCancelButtonProps()} size={25} />}
-        />
-      </ButtonGroup>
-    ) : (
-      <HStack>
-        <IconButton
-          colorScheme="teal"
-          variant="ghost"
-          aria-label=" edit"
-          icon={<RiEditBoxLine {...getEditButtonProps()} size={25} />}
-        />
-
-        <IconButton
-          colorScheme="pink"
-          variant="ghost"
-          aria-label="delete edit"
-          onClick={onOpen}
-          icon={<RiDeleteBin6Line {...getCancelButtonProps()} size={25} />}
-        />
-      </HStack>
-    );
-  }
 
   return (
     <>
@@ -180,7 +166,11 @@ export default function Comment({
         {owned ? (
           <HStack justify={"space-between"} w="full">
             <Editable
-              defaultValue={comment.content}
+              defaultValue={uiComment}
+              submitOnBlur={true}
+              onSubmit={handleEditSubmit}
+              value={uiComment}
+              onChange={(e) => setUiComment(e)}
               display={"flex"}
               justifyContent={"space-between"}
               fontSize={{ base: "sm", sm: "md" }}
@@ -188,9 +178,11 @@ export default function Comment({
             >
               <HStack w={"full"}>
                 <EditablePreview />
+
                 <Input as={EditableTextarea} />
               </HStack>
-              <EditableControls />
+
+              <EditableControls onOpen={onOpen} />
             </Editable>
           </HStack>
         ) : (

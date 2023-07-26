@@ -106,3 +106,16 @@ export const DELETECOMMENT = gql`
     }
   }
 `;
+
+export const UPDATECOMMENT = gql`
+  mutation ($commentId: ID!, $content: String!) {
+    updateComment(commentId: $commentId, content: $content) {
+      error {
+        message
+      }
+      comment {
+        id
+      }
+    }
+  }
+`;

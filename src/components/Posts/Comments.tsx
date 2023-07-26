@@ -12,7 +12,7 @@ import {
 import { BsFillSendFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { ADDCOMMENT, DELETECOMMENT } from "../../api/mutation";
+import { ADDCOMMENT, DELETECOMMENT, UPDATECOMMENT } from "../../api/mutation";
 import { CommentType } from "../../api/types";
 import Comment from "./Comment";
 import { toastToast } from "./Hooks/useToast";
@@ -50,6 +50,8 @@ export default function Comments({
   const [addComment, { data: addData }] = useMutation<CommentType>(ADDCOMMENT);
   const [deleteComment, { data: deleteData }] =
     useMutation<CommentType>(DELETECOMMENT);
+  const [updateComment, { data: updateData }] =
+    useMutation<CommentType>(UPDATECOMMENT);
 
   // update the comments when the user adds a new comment
   useEffect(() => {
@@ -76,6 +78,19 @@ export default function Comments({
       }
     }
   }, [deleteData?.deleteComment.comment]);
+
+  useEffect(() => {
+    if (updateData?.updateComment.comment) {
+      console.log(updateData?.updateComment.comment);
+
+      toastToast({
+        toast,
+        title: "Comment updated",
+        description: "Your comment has been updated.",
+        status: "success",
+      });
+    }
+  }, [updateData?.updateComment.comment]);
 
   const [uiComments, setUiComments] = useState(comments);
   const [commentInput, setCommentInput] = useState("");
@@ -152,6 +167,8 @@ export default function Comments({
               setUiComments={setUiComments}
               setNumComments={setNumComments}
               deleteComment={deleteComment}
+              updateComment={updateComment}
+              toast={toast}
             />
           ))}
         </Box>
