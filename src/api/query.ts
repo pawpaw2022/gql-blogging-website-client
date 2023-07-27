@@ -55,3 +55,16 @@ export const GET_ME_ID = gql`
     }
   }
 `;
+
+export const GET_ALL_CATEGORY = gql`
+  query {
+    categories {
+      id
+      name
+      tags {
+        id
+        name
+      }
+    }
+  }
+`;

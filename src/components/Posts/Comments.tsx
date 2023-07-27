@@ -36,7 +36,6 @@ type Props = {
       };
     };
   }[];
-
   toast: any;
   setNumComments: React.Dispatch<React.SetStateAction<number>>;
 };

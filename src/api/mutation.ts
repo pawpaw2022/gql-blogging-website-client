@@ -119,3 +119,27 @@ export const UPDATECOMMENT = gql`
     }
   }
 `;
+
+export const CREATEPOST = gql`
+  mutation ($title: String!, $content: String!, $tagIds: [ID!]!) {
+    createPostwTags(title: $title, content: $content, tagIds: $tagIds) {
+      error {
+        message
+      }
+      post {
+        content
+        title
+        tags {
+          name
+        }
+        likes {
+          id
+        }
+        comments {
+          content
+        }
+        updatedAt
+      }
+    }
+  }
+`;

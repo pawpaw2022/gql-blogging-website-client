@@ -1,10 +1,11 @@
 /** @format */
 
-import { Heading, Container } from "@chakra-ui/react";
+import { Heading, Container, Divider } from "@chakra-ui/react";
 import Post from "./Post";
 import { useQuery } from "@apollo/client";
 import { PostsType } from "../../api/types";
 import { GET_POSTS } from "../../api/query";
+import CreatePost from "./CreatePost";
 
 const Posts = () => {
   const { loading, error, data: postsData } = useQuery<PostsType>(GET_POSTS);
@@ -17,6 +18,8 @@ const Posts = () => {
       <Heading as="h1" marginBottom="2rem">
         Feeds and Stories
       </Heading>
+      {localStorage.getItem("token") && <CreatePost />}
+      <Divider my={8} />
 
       {postsData?.posts.map((post) => (
         <Post

@@ -177,9 +177,16 @@ export default function Comment({
               fontSize={{ base: "sm", sm: "md" }}
               w="full"
             >
-              <HStack maxW={{ base: "20ch", md: "30ch", lg: "40ch" }}>
+              <HStack
+                maxW={{ base: "18ch", sm: "22ch", md: "30ch", lg: "40ch" }}
+              >
                 <EditablePreview overflowX={"auto"} />
-                <Input as={EditableTextarea} py={6} w={"full"} />
+                <Input
+                  as={EditableTextarea}
+                  py={4}
+                  px={2}
+                  w={{ base: "18ch", sm: "22ch", md: "30ch", lg: "40ch" }}
+                />
               </HStack>
 
               <EditableControls onOpen={onOpen} />

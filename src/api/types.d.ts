@@ -139,3 +139,48 @@ export type CommentType = {
     };
   };
 };
+
+export type CategoryType = {
+  categories: {
+    id: string;
+    name: string;
+    tags: {
+      id: string;
+      name: string;
+    }[];
+  }[];
+};
+
+export type CreatePostType = {
+  createPostwTags: {
+    error: {
+      message: string;
+    };
+    post: {
+      content: string;
+      title: string;
+      tags: {
+        name: string;
+      }[];
+      likes: {
+        id: string;
+      }[];
+      comments: {
+        content: string;
+        id: string;
+        postId: string;
+        userId: string;
+        updatedAt: string;
+        user: {
+          firstName: string;
+          lastName: string;
+          profile: {
+            avatar: {
+              url: string;
+            };
+          };
+        };
+      }[];
+    };
+  };
+};
