@@ -15,7 +15,12 @@ const Posts = () => {
 
   useEffect(() => {
     if (postsData?.posts) {
-      setPosts(postsData.posts);
+      // Sort the posts by updatedAt date in descending order
+      const sortedPosts = [...postsData.posts].sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+      setPosts(sortedPosts);
     }
   }, [postsData?.posts]);
 
