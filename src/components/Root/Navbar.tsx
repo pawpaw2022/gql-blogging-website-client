@@ -206,17 +206,18 @@ const AvatarNav = () => {
       p={4}
       justify={"flex-end"}
     >
-      <Text
+      <Button
         fontWeight={600}
         color={useColorModeValue("gray.600", "gray.200")}
-        cursor={"pointer"}
+        colorScheme="pink"
+        variant="ghost"
         onClick={() => {
           localStorage.removeItem("token");
           window.location.href = "/signin";
         }}
       >
         Sign Out
-      </Text>
+      </Button>
     </HStack>
   );
 };
