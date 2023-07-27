@@ -25,7 +25,7 @@ const Posts = () => {
   }, [postsData?.posts]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :</p>;
+  if (error) return <p>Error : Post {error.message}</p>;
 
   return (
     <Container maxW={"6xl"} p={{ sm: 2, md: 4, lg: 7 }}>
