@@ -127,18 +127,45 @@ export const CREATEPOST = gql`
         message
       }
       post {
+        authorId
+        comments {
+          content
+          id
+          postId
+          userId
+          updatedAt
+          user {
+            firstName
+            lastName
+            profile {
+              avatar {
+                url
+              }
+            }
+          }
+        }
         content
-        title
+        id
+        likes {
+          id
+          postId
+          userId
+        }
+        published
         tags {
           name
         }
-        likes {
-          id
-        }
-        comments {
-          content
-        }
+        title
         updatedAt
+        user {
+          firstName
+          lastName
+          profile {
+            avatar {
+              url
+            }
+          }
+        }
       }
     }
   }

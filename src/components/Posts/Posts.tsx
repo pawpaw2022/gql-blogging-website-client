@@ -6,9 +6,18 @@ import { useQuery } from "@apollo/client";
 import { PostsType } from "../../api/types";
 import { GET_POSTS } from "../../api/query";
 import CreatePost from "./CreatePost";
+import { useEffect, useState } from "react";
 
 const Posts = () => {
   const { loading, error, data: postsData } = useQuery<PostsType>(GET_POSTS);
+
+  const [posts, setPosts] = useState<PostsType["posts"]>([]);
+
+  useEffect(() => {
+    if (postsData?.posts) {
+      setPosts(postsData.posts);
+    }
+  }, [postsData?.posts]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
@@ -18,10 +27,10 @@ const Posts = () => {
       <Heading as="h1" marginBottom="2rem">
         Feeds and Stories
       </Heading>
-      {localStorage.getItem("token") && <CreatePost />}
+      {localStorage.getItem("token") && <CreatePost setPosts={setPosts} />}
       <Divider my={8} />
 
-      {postsData?.posts.map((post) => (
+      {posts.map((post) => (
         <Post
           key={post.id}
           id={post.id}

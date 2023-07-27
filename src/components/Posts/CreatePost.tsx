@@ -33,7 +33,11 @@ import Categories from "./Categories";
 import { CREATEPOST } from "../../api/mutation";
 import { toastToast } from "./Hooks/useToast";
 
-export default function CreatePost() {
+type Props = {
+  setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
+};
+
+export default function CreatePost({ setPosts }: Props) {
   const { data: categoryData } = useQuery<CategoryType>(GET_ALL_CATEGORY);
   const [addPost, { data: addData }] = useMutation<CreatePostType>(CREATEPOST);
 
@@ -84,6 +88,9 @@ export default function CreatePost() {
 
   useEffect(() => {
     if (addData?.createPostwTags.post) {
+      // update the ui
+      setPosts((prev) => [addData.createPostwTags.post, ...prev]);
+
       toastToast({
         title: "Post created.",
         description: "Your post has been created.",
