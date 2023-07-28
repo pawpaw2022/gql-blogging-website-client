@@ -148,7 +148,7 @@ export default function Post({
           />
         </Box>
       </Collapse>
-      <Divider marginTop="21px" />
+      <Divider my={8} />
     </Box>
   );
 }

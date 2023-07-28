@@ -1,11 +1,6 @@
 /** @format */
 
-import {
-  Button,
-  ButtonGroup,
-  IconButton,
-  useEditableControls,
-} from "@chakra-ui/react";
+import { ButtonGroup, IconButton, useEditableControls } from "@chakra-ui/react";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { RiDeleteBin6Line, RiEditBoxLine } from "react-icons/ri";
 import { HStack } from "@chakra-ui/react";

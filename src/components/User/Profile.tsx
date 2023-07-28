@@ -8,7 +8,6 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Post from "../Posts/Post";
 import AvatarWRipple from "./Avatar";
 import { Navigate } from "react-router-dom";
 

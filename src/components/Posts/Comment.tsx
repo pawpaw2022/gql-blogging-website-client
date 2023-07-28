@@ -2,18 +2,12 @@
 
 import {
   Avatar,
-  Box,
   Button,
-  ButtonGroup,
   Editable,
-  EditableInput,
   EditablePreview,
   EditableTextarea,
-  Flex,
   HStack,
   Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -23,24 +17,13 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  useEditableControls,
 } from "@chakra-ui/react";
 import React from "react";
-import {
-  RiDeleteBin6Fill,
-  RiDeleteBin6Line,
-  RiEditBoxFill,
-  RiEditBoxLine,
-} from "react-icons/ri";
-import { BlogAuthor } from "./BlogAuthor";
 import { useState } from "react";
 import { MeType } from "../../api/types";
 import { GET_ME_ID } from "../../api/query";
 import { useQuery } from "@apollo/client";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { EditableControls } from "./EditableControls";
-import { IconButton } from "@chakra-ui/react";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import { toastToast } from "./Hooks/useToast";
 
 type Props = {
