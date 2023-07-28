@@ -41,6 +41,7 @@ export const GET_POSTS = gql`
       authorId
       published
       tags {
+        id
         name
       }
       updatedAt

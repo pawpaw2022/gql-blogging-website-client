@@ -3,37 +3,35 @@
 import {
   Box,
   Button,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  FormLabel,
   Heading,
-  Input,
-  Stack,
   Text,
-  Textarea,
   VStack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { GET_ALL_CATEGORY } from "../../../api/query";
-import { useMutation, useQuery } from "@apollo/client";
-import { CategoryType, CreatePostType, PostType } from "../../../api/types";
-import Categories from "./Categories";
+import { useMutation } from "@apollo/client";
+import { CreatePostType, PostType } from "../../../api/types";
 import { CREATEPOST } from "../../../api/mutation";
 import { toastToast } from "../Hooks/useToast";
+import DrawerForm from "./DrawerForm";
 
 type Props = {
   setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
+  categoryData: {
+    categories: {
+      id: string;
+      name: string;
+      tags: {
+        id: string;
+        name: string;
+      }[];
+    }[];
+  };
 };
 
-export default function CreatePost({ setPosts }: Props) {
-  const { data: categoryData } = useQuery<CategoryType>(GET_ALL_CATEGORY);
+export default function CreatePost({ setPosts, categoryData }: Props) {
   const [addPost, { data: addData }] = useMutation<CreatePostType>(CREATEPOST);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -128,67 +126,20 @@ export default function CreatePost({ setPosts }: Props) {
           </VStack>
         </Button>
       </Box>
-      <Drawer placement={"right"} onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">
-            Create a new story
-          </DrawerHeader>
-
-          <DrawerBody>
-            <Stack spacing="24px">
-              <Box>
-                <FormLabel htmlFor="title" fontSize="lg" fontWeight="bold">
-                  Title
-                </FormLabel>
-                <Input
-                  id="title"
-                  placeholder="Title of your story"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel htmlFor="content" fontSize="lg" fontWeight="bold">
-                  Content
-                </FormLabel>
-                <Textarea
-                  id="content"
-                  placeholder="Content of your story"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                />
-              </Box>
-
-              <Text fontSize="lg" fontWeight="bold">
-                Tags
-              </Text>
-
-              {categoryData?.categories.map((category) => (
-                <Categories
-                  key={category.id}
-                  categoryData={category}
-                  setTags={setTags}
-                />
-              ))}
-            </Stack>
-          </DrawerBody>
-
-          <DrawerFooter borderTopWidth="1px">
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              colorScheme="blue"
-              onClick={handleSubmit}
-              isLoading={btnLoading}
-            >
-              Submit
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <DrawerForm
+        isOpen={isOpen}
+        onClose={onClose}
+        title={title}
+        setTitle={setTitle}
+        content={content}
+        setContent={setContent}
+        tags={tags}
+        setTags={setTags}
+        categoryData={categoryData ? categoryData : { categories: [] }}
+        setBtnLoading={setBtnLoading}
+        btnLoading={btnLoading}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }

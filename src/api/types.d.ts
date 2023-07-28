@@ -20,6 +20,7 @@ export type PostType = {
     };
   };
   tags: {
+    id: string;
     name: string;
   }[];
   comments: {
@@ -153,6 +154,15 @@ export type CategoryType = {
 
 export type CreatePostType = {
   createPostwTags: {
+    error: {
+      message: string;
+    };
+    post: PostType;
+  };
+};
+
+export type UpdatePostType = {
+  updatePostwTags: {
     error: {
       message: string;
     };

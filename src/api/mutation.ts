@@ -170,3 +170,59 @@ export const CREATEPOST = gql`
     }
   }
 `;
+
+export const UPDATEPOST = gql`
+  mutation ($title: String!, $content: String!, $tagIds: [ID!]!, $postId: ID!) {
+    updatePostwTags(
+      title: $title
+      content: $content
+      tagIds: $tagIds
+      postId: $postId
+    ) {
+      error {
+        message
+      }
+      post {
+        authorId
+        comments {
+          content
+          id
+          postId
+          userId
+          updatedAt
+          user {
+            firstName
+            lastName
+            profile {
+              avatar {
+                url
+              }
+            }
+          }
+        }
+        content
+        id
+        likes {
+          id
+          postId
+          userId
+        }
+        published
+        tags {
+          name
+        }
+        title
+        updatedAt
+        user {
+          firstName
+          lastName
+          profile {
+            avatar {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+`;

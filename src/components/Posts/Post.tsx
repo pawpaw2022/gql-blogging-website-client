@@ -14,13 +14,15 @@ import {
   useDisclosure,
   Collapse,
   useToast,
+  IconButton,
+  Flex,
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
 import { BlogAuthor } from "./BlogAuthor";
-import { PostType } from "../../api/types";
 import { useLike } from "./Hooks/useLike";
 import Comments from "./Comments/Comments";
+import { RiDeleteBin6Line, RiEditBoxLine } from "react-icons/ri";
 
 interface IBlogTags {
   tags: Array<string>;
@@ -51,6 +53,53 @@ const commentStyle = {
   cursor: "pointer",
 };
 
+type Prop = {
+  id: string;
+  title: string;
+  content: string;
+  published: boolean;
+  authorId: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    profile: {
+      avatar: {
+        url: string;
+      };
+    };
+  };
+  tags: {
+    name: string;
+  }[];
+  comments: {
+    content: string;
+    id: string;
+    postId: string;
+    userId: string;
+    updatedAt: string;
+    user: {
+      firstName: string;
+      lastName: string;
+      profile: {
+        avatar: {
+          url: string;
+        };
+      };
+    };
+  }[];
+  likes: {
+    id: string;
+    postId: string;
+    userId: string;
+  }[];
+
+  updatedAt: string;
+
+  handleEditPost: (id: string) => void;
+  onOpen: () => void;
+  toast: any;
+};
+
 export default function Post({
   title,
   content,
@@ -60,9 +109,9 @@ export default function Post({
   tags,
   user,
   updatedAt,
-}: PostType) {
-  const toast = useToast();
-
+  handleEditPost,
+  toast,
+}: Prop) {
   // like control
   const { handleLike, liked, numLikes } = useLike(likes, id, toast);
 
@@ -81,20 +130,41 @@ export default function Post({
       justifyContent="center"
       marginTop={{ base: "3", sm: "0" }}
     >
-      <BlogTags tags={tagNames} />
-      <Heading marginTop="1">
-        <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-          {title}
-        </Link>
-      </Heading>
-      <Text
-        as="p"
-        marginTop="2"
-        color={useColorModeValue("gray.700", "gray.200")}
-        fontSize="lg"
-      >
-        {content}
-      </Text>
+      <HStack justify={"space-between"} align={"start"}>
+        <Box>
+          <BlogTags tags={tagNames} />
+          <Heading marginTop="1">
+            <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
+              {title}
+            </Link>
+          </Heading>
+          <Text
+            as="p"
+            marginTop="2"
+            color={useColorModeValue("gray.700", "gray.200")}
+            fontSize="lg"
+          >
+            {content}
+          </Text>
+        </Box>
+        <Flex direction={{ base: "column", md: "row" }}>
+          <IconButton
+            colorScheme="teal"
+            variant="ghost"
+            aria-label="edit"
+            mr={{ base: "0", md: "2" }}
+            mb={{ base: "2", md: "0" }}
+            icon={<RiEditBoxLine size={25} />}
+            onClick={() => handleEditPost(id)}
+          />
+          <IconButton
+            colorScheme="pink"
+            variant="ghost"
+            aria-label="delete edit"
+            icon={<RiDeleteBin6Line size={25} />}
+          />
+        </Flex>
+      </HStack>
 
       <HStack justify={"space-between"} mt="2">
         <HStack>
