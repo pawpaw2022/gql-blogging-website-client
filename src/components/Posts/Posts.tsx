@@ -5,7 +5,7 @@ import Post from "./Post";
 import { useQuery } from "@apollo/client";
 import { PostsType } from "../../api/types";
 import { GET_POSTS } from "../../api/query";
-import CreatePost from "./CreatePost";
+import CreatePost from "./Create/CreatePost";
 import { useEffect, useState } from "react";
 
 const Posts = () => {

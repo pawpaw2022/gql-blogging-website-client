@@ -20,11 +20,11 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
-import { MeType } from "../../api/types";
-import { GET_ME_ID } from "../../api/query";
+import { MeType } from "../../../api/types";
+import { GET_ME_ID } from "../../../api/query";
 import { useQuery } from "@apollo/client";
 import { EditableControls } from "./EditableControls";
-import { toastToast } from "./Hooks/useToast";
+import { toastToast } from "../Hooks/useToast";
 
 type Props = {
   comment: {

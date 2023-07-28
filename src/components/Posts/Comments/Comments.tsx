@@ -12,10 +12,14 @@ import {
 import { BsFillSendFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { ADDCOMMENT, DELETECOMMENT, UPDATECOMMENT } from "../../api/mutation";
-import { CommentType } from "../../api/types";
+import {
+  ADDCOMMENT,
+  DELETECOMMENT,
+  UPDATECOMMENT,
+} from "../../../api/mutation";
+import { CommentType } from "../../../api/types";
 import Comment from "./Comment";
-import { toastToast } from "./Hooks/useToast";
+import { toastToast } from "../Hooks/useToast";
 
 type Props = {
   id: string;

@@ -17,11 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComments, FaRegComments } from "react-icons/fa";
-
 import { BlogAuthor } from "./BlogAuthor";
 import { PostType } from "../../api/types";
 import { useLike } from "./Hooks/useLike";
-import Comments from "./Comments";
+import Comments from "./Comments/Comments";
 
 interface IBlogTags {
   tags: Array<string>;

@@ -21,12 +21,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { GET_ALL_CATEGORY } from "../../api/query";
+import { GET_ALL_CATEGORY } from "../../../api/query";
 import { useMutation, useQuery } from "@apollo/client";
-import { CategoryType, CreatePostType, PostType } from "../../api/types";
+import { CategoryType, CreatePostType, PostType } from "../../../api/types";
 import Categories from "./Categories";
-import { CREATEPOST } from "../../api/mutation";
-import { toastToast } from "./Hooks/useToast";
+import { CREATEPOST } from "../../../api/mutation";
+import { toastToast } from "../Hooks/useToast";
 
 type Props = {
   setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
