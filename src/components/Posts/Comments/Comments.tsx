@@ -42,6 +42,7 @@ type Props = {
   }[];
   toast: any;
   setNumComments: React.Dispatch<React.SetStateAction<number>>;
+  meId: string;
 };
 
 export default function Comments({
@@ -49,6 +50,7 @@ export default function Comments({
   toast,
   id: postId,
   setNumComments,
+  meId,
 }: Props) {
   const [addComment, { data: addData }] = useMutation<CommentType>(ADDCOMMENT);
   const [deleteComment, { data: deleteData }] =
@@ -172,6 +174,7 @@ export default function Comments({
               deleteComment={deleteComment}
               updateComment={updateComment}
               toast={toast}
+              meId={meId}
             />
           ))}
         </Box>

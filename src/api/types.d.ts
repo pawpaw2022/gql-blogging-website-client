@@ -169,3 +169,12 @@ export type UpdatePostType = {
     post: PostType;
   };
 };
+
+export type DeletePostType = {
+  deletePost: {
+    error: {
+      message: string;
+    };
+    post: PostType;
+  };
+};

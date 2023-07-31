@@ -11,17 +11,18 @@ import Post from "./Post";
 import { useMutation, useQuery } from "@apollo/client";
 import { CategoryType, PostsType, UpdatePostType } from "../../api/types";
 import { GET_ALL_CATEGORY, GET_POSTS } from "../../api/query";
-import CreatePost from "./Mutation/CreatePost";
+import CreatePost from "./Create/CreatePost";
 import { useEffect, useState } from "react";
 import { toastToast } from "./Hooks/useToast";
-import { UPDATEPOST } from "../../api/mutation";
-import UpdatePost from "./Mutation/UpdatePost";
+import { DELETEPOST, UPDATEPOST } from "../../api/mutation";
+import UpdatePost from "./Create/UpdatePost";
 
 const Posts = () => {
   const { loading, error, data: postsData } = useQuery<PostsType>(GET_POSTS);
   const { data: categoryData } = useQuery<CategoryType>(GET_ALL_CATEGORY);
   const [updatePost, { data: updateData }] =
     useMutation<UpdatePostType>(UPDATEPOST);
+  const [deletePost, { data: deleteData }] = useMutation(DELETEPOST);
 
   const toast = useToast();
 
@@ -98,6 +99,31 @@ const Posts = () => {
     }, 1500);
   };
 
+  const handleDelete = (id: string) => {
+    console.log("delete post, ", id);
+
+    // delete from database
+    deletePost({
+      variables: {
+        id,
+      },
+    });
+
+    // delete from ui
+    setPosts((prev) => prev.filter((post) => post.id !== id));
+  };
+
+  useEffect(() => {
+    if (deleteData?.deletePost) {
+      toastToast({
+        title: "Post deleted.",
+        description: "Your post has been deleted.",
+        status: "success",
+        toast,
+      });
+    }
+  }, [deleteData?.deletePost]);
+
   useEffect(() => {
     if (updateData?.updatePostwTags) {
       toastToast({
@@ -142,6 +168,7 @@ const Posts = () => {
             handleEditPost={handleEditPost}
             onOpen={onOpen}
             toast={toast}
+            handleDelete={handleDelete}
           />
         ))}
       </Container>

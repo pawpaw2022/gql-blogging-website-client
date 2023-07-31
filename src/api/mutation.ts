@@ -226,3 +226,16 @@ export const UPDATEPOST = gql`
     }
   }
 `;
+
+export const DELETEPOST = gql`
+  mutation ($id: ID!) {
+    deletePost(id: $id) {
+      error {
+        message
+      }
+      post {
+        id
+      }
+    }
+  }
+`;

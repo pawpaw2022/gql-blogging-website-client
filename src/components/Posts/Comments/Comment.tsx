@@ -81,6 +81,8 @@ type Props = {
   }) => Promise<any>;
 
   toast: any;
+
+  meId: string;
 };
 
 export default function Comment({
@@ -90,15 +92,15 @@ export default function Comment({
   deleteComment,
   updateComment,
   toast,
+  meId,
 }: Props) {
-  const { data: meData } = useQuery<MeType>(GET_ME_ID);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // check if the user owns the comment
   let owned = false;
   if (localStorage.getItem("token")) {
-    if (meData?.me) {
-      owned = meData.me.id === comment.userId;
+    if (meId) {
+      owned = meId === comment.userId;
     }
   }
 
