@@ -98,7 +98,7 @@ export type ProfileType = {
     posts: PostType[];
     likes: {
       posts: PostType[];
-    };
+    }[];
   };
 };
 

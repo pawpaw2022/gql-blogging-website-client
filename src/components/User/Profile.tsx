@@ -13,14 +13,16 @@ import {
   Text,
   VStack,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import AvatarWRipple from "./Avatar";
 import { Navigate } from "react-router-dom";
-import { ProfileType } from "../../api/types";
+import { PostType, ProfileType } from "../../api/types";
 import { GET_ME_PROFILE } from "../../api/query";
 import { useQuery } from "@apollo/client";
-import Post from "../Posts/Post";
+import { useState } from "react";
+import { useEffect } from "react";
+import Posts from "./Posts";
+import PostSkeleton from "../Posts/PostSkeleton";
 
 export default function Profile() {
   if (!localStorage?.getItem("token")) {
@@ -28,7 +30,11 @@ export default function Profile() {
   }
 
   // get user's profile
-  const { data: profileData } = useQuery<ProfileType>(GET_ME_PROFILE);
+  const {
+    loading,
+    error,
+    data: profileData,
+  } = useQuery<ProfileType>(GET_ME_PROFILE);
 
   const me = profileData
     ? {
@@ -37,8 +43,6 @@ export default function Profile() {
         bio: profileData.me.profile.bio,
         avatarUrl: profileData.me.profile.avatar.url,
         createdAt: profileData.me.createdAt,
-        posts: profileData.me.posts,
-        likedPosts: profileData.me.likes.posts,
       }
     : {
         name: "",
@@ -46,9 +50,68 @@ export default function Profile() {
         bio: "",
         avatarUrl: "",
         createdAt: "",
-        posts: [],
-        likedPosts: [],
       };
+
+  const [myPosts, setMyPosts] = useState<PostType[]>([]);
+  const [myLikedPosts, setMyLikedPosts] = useState<PostType[]>([]);
+
+  useEffect(() => {
+    if (profileData?.me) {
+      // Sort the posts by updatedAt date in descending order
+
+      const sortedMyPosts = [...profileData.me.posts]?.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+
+      const likedPosts = profileData.me.likes
+        .map((like) => like.posts)
+        .map((post) => post[0]);
+
+      const sortedLikedPosts = [...likedPosts]?.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+
+      setMyPosts(sortedMyPosts);
+      setMyLikedPosts(sortedLikedPosts);
+    }
+  }, [profileData]);
+
+  const postsElement = {
+    myPosts:
+      myPosts.length === 0 ? (
+        <Text
+          color={useColorModeValue("gray.600", "gray.400")}
+          mb={4}
+          mt={8}
+          fontSize={"lg"}
+          align={"center"}
+        >
+          It seems like you have not posted anything yet. <br />
+          Start posting now!
+        </Text>
+      ) : (
+        <Posts posts={myPosts} setPosts={setMyPosts} />
+      ),
+
+    likedPosts:
+      myLikedPosts.length === 0 ? (
+        <Text
+          color={useColorModeValue("gray.600", "gray.400")}
+          mb={4}
+          mt={8}
+          fontSize={"lg"}
+          align={"center"}
+        >
+          It seems like you have not liked anything yet. 💔
+        </Text>
+      ) : (
+        <Posts posts={myLikedPosts} setPosts={setMyLikedPosts} />
+      ),
+  };
+
+  if (error) return <p>Error :{error.message}</p>;
 
   return (
     <Container maxW={"7xl"} p="12">
@@ -122,10 +185,10 @@ export default function Profile() {
 
           <TabPanels>
             <TabPanel>
-              <p>feeds</p>
+              {!loading ? postsElement.myPosts : <PostSkeleton nums={3} />}
             </TabPanel>
             <TabPanel>
-              <p>Likes</p>
+              {!loading ? postsElement.likedPosts : <PostSkeleton nums={3} />}
             </TabPanel>
           </TabPanels>
         </Tabs>
