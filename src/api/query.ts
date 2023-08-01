@@ -57,6 +57,20 @@ export const GET_ME_ID = gql`
   }
 `;
 
+export const GET_ME_AVATAR = gql`
+  query {
+    me {
+      profile {
+        avatar {
+          url
+        }
+      }
+      firstName
+      lastName
+    }
+  }
+`;
+
 export const GET_ALL_CATEGORY = gql`
   query {
     categories {
@@ -66,6 +80,127 @@ export const GET_ALL_CATEGORY = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const GET_ME_PROFILE = gql`
+  query {
+    me {
+      profile {
+        avatar {
+          url
+        }
+        bio
+      }
+      firstName
+      lastName
+      id
+      email
+      createdAt
+      posts {
+        content
+        id
+        likes {
+          id
+          postId
+          userId
+        }
+        comments {
+          content
+          id
+          postId
+          userId
+          updatedAt
+          user {
+            firstName
+            lastName
+            profile {
+              avatar {
+                url
+              }
+            }
+          }
+        }
+        title
+        user {
+          firstName
+          lastName
+          profile {
+            avatar {
+              url
+            }
+          }
+        }
+        authorId
+        published
+        tags {
+          id
+          name
+        }
+        updatedAt
+      }
+      likes {
+        posts {
+          content
+          id
+          likes {
+            id
+            postId
+            userId
+          }
+          comments {
+            content
+            id
+            postId
+            userId
+            updatedAt
+            user {
+              firstName
+              lastName
+              profile {
+                avatar {
+                  url
+                }
+              }
+            }
+          }
+          title
+          user {
+            firstName
+            lastName
+            profile {
+              avatar {
+                url
+              }
+            }
+          }
+          authorId
+          published
+          tags {
+            id
+            name
+          }
+          updatedAt
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ME_SETTING = gql`
+  query {
+    me {
+      profile {
+        avatar {
+          url
+        }
+        bio
+      }
+      firstName
+      lastName
+      id
+      email
     }
   }
 `;

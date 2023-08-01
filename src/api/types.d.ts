@@ -72,6 +72,48 @@ export type MeType = {
       postId: string;
       userId: string;
     };
+    profile: {
+      avatar: {
+        url: string;
+      };
+    };
+    firstName: string;
+    lastName: string;
+  };
+};
+
+export type ProfileType = {
+  me: {
+    profile: {
+      avatar: {
+        url: string;
+      };
+      bio: string;
+    };
+    firstName: string;
+    lastName: string;
+    id: string;
+    email: string;
+    createdAt: string;
+    posts: PostType[];
+    likes: {
+      posts: PostType[];
+    };
+  };
+};
+
+export type SettingType = {
+  me: {
+    profile: {
+      avatar: {
+        url: string;
+      };
+      bio: string;
+    };
+    firstName: string;
+    lastName: string;
+    id: string;
+    email: string;
   };
 };
 

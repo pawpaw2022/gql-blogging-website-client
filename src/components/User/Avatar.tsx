@@ -2,7 +2,12 @@
 
 import { Avatar, Box, Flex, keyframes } from "@chakra-ui/react";
 
-export default function AvatarWRipple() {
+type Props = {
+  avatarUrl: string;
+  name: string;
+};
+
+export default function AvatarWRipple({ avatarUrl, name }: Props) {
   const size = "96px";
   const color = "teal";
 
@@ -48,8 +53,8 @@ export default function AvatarWRipple() {
         }}
       >
         <Avatar
-          src="https://100k-faces.glitch.me/random-image"
-          name="John Doe"
+          src={avatarUrl}
+          name={name}
           size="full"
           position="absolute"
           top={0}

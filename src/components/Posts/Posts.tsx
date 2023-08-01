@@ -6,6 +6,11 @@ import {
   Divider,
   useDisclosure,
   useToast,
+  Box,
+  Text,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
 } from "@chakra-ui/react";
 import Post from "./Post";
 import { useMutation, useQuery } from "@apollo/client";
@@ -16,6 +21,7 @@ import { useEffect, useState } from "react";
 import { toastToast } from "./Hooks/useToast";
 import { DELETEPOST, UPDATEPOST } from "../../api/mutation";
 import UpdatePost from "./Create/UpdatePost";
+import PostSkeleton from "./PostSkeleton";
 
 const Posts = () => {
   const { loading, error, data: postsData } = useQuery<PostsType>(GET_POSTS);
@@ -135,7 +141,6 @@ const Posts = () => {
     }
   }, [updateData?.updatePostwTags]);
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : Post {error.message}</p>;
 
   return (
@@ -152,39 +157,45 @@ const Posts = () => {
         )}
         <Divider my={8} />
 
-        {posts.map((post) => (
-          <Post
-            key={post.id}
-            id={post.id}
-            authorId={post.authorId}
-            title={post.title}
-            content={post.content}
-            published={post.published}
-            updatedAt={post.updatedAt}
-            comments={post.comments}
-            likes={post.likes}
-            user={post.user}
-            tags={post.tags}
-            handleEditPost={handleEditPost}
-            onOpen={onOpen}
-            toast={toast}
-            handleDelete={handleDelete}
-          />
-        ))}
+        {!loading ? (
+          <Box>
+            {posts.map((post) => (
+              <Post
+                key={post.id}
+                id={post.id}
+                authorId={post.authorId}
+                title={post.title}
+                content={post.content}
+                published={post.published}
+                updatedAt={post.updatedAt}
+                comments={post.comments}
+                likes={post.likes}
+                user={post.user}
+                tags={post.tags}
+                handleEditPost={handleEditPost}
+                onOpen={onOpen}
+                toast={toast}
+                handleDelete={handleDelete}
+              />
+            ))}
+            <UpdatePost
+              isOpen={isOpen}
+              onClose={onClose}
+              title={editTitle}
+              setTitle={setEditTitle}
+              content={editContent}
+              setContent={setEditContent}
+              tags={editTags}
+              setTags={setEditTags}
+              categoryData={categoryData ? categoryData : { categories: [] }}
+              btnLoading={btnLoading}
+              handleSubmit={handleSubmit}
+            />
+          </Box>
+        ) : (
+          <PostSkeleton nums={5} />
+        )}
       </Container>
-      <UpdatePost
-        isOpen={isOpen}
-        onClose={onClose}
-        title={editTitle}
-        setTitle={setEditTitle}
-        content={editContent}
-        setContent={setEditContent}
-        tags={editTags}
-        setTags={setEditTags}
-        categoryData={categoryData ? categoryData : { categories: [] }}
-        btnLoading={btnLoading}
-        handleSubmit={handleSubmit}
-      />
     </>
   );
 };

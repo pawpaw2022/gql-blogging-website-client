@@ -21,11 +21,17 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import DarkModeToggle from "./DarkModeToggle";
+import { GET_ME_AVATAR } from "../../api/query";
+import { MeType } from "../../api/types";
+import { useQuery } from "@apollo/client";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isOpenAvatar, onToggle: onToggleAvatar } = useDisclosure();
   const auth = localStorage.getItem("token");
+
+  // get user's avatar
+  const { data: meData } = useQuery<MeType>(GET_ME_AVATAR);
 
   return (
     <Box w={"100vw"}>
@@ -86,9 +92,9 @@ export default function Navbar() {
             <Avatar
               border={"2px solid"}
               ml={2}
-              name="John Doe"
+              name={meData?.me?.firstName + " " + meData?.me?.lastName}
               borderColor={useColorModeValue("gray.200", "gray.900")}
-              src="https://100k-faces.glitch.me/random-image"
+              src={meData?.me && meData?.me?.profile.avatar.url}
               cursor={"pointer"}
               onClick={onToggleAvatar}
             />

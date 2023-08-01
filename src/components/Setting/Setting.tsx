@@ -1,5 +1,6 @@
 /** @format */
 
+import { useQuery } from "@apollo/client";
 import {
   ButtonGroup,
   Button,
@@ -17,67 +18,34 @@ import {
   Text,
   HStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { GiCancel } from "react-icons/gi";
 import { Navigate } from "react-router-dom";
-
-const INFO = {
-  firstName: "John",
-  lastName: "Doe",
-  email: "jdoe@domain.com",
-
-  bio: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa tenetur commodi impedit alias fugiat corrupti iure maxime eveniet neque harum.",
-};
-
-const FORMHTML = {
-  firstName: {
-    before: <Text fontWeight={"semibold"}>{INFO.firstName}</Text>,
-    after: (
-      <Input
-        id="first-name"
-        placeholder="First name"
-        defaultValue={INFO.firstName}
-      />
-    ),
-  },
-
-  lastName: {
-    before: <Text fontWeight={"semibold"}>{INFO.lastName}</Text>,
-    after: (
-      <Input
-        id="last-name"
-        placeholder="Last name"
-        defaultValue={INFO.lastName}
-      />
-    ),
-  },
-
-  email: {
-    before: <Text fontWeight={"semibold"}>{INFO.email}</Text>,
-    after: (
-      <Input
-        id="email"
-        placeholder="xxx@example.com"
-        defaultValue={INFO.email}
-      />
-    ),
-  },
-
-  bio: {
-    before: <Text fontWeight={"semibold"}>{INFO.bio}</Text>,
-    after: (
-      <Textarea
-        id="bio"
-        placeholder="Tell us about yourself..."
-        defaultValue={INFO.bio}
-      />
-    ),
-  },
-};
+import { GET_ME_SETTING } from "../../api/query";
+import { SettingType } from "../../api/types";
 
 export default function Setting() {
+  const { data: settingData } = useQuery<SettingType>(GET_ME_SETTING);
+
   const [toggleEdit, setToggleEdit] = React.useState(false);
+  const [form, setForm] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    bio: "",
+  });
+
+  useEffect(() => {
+    if (settingData) {
+      setForm({
+        firstName: settingData.me.firstName,
+        lastName: settingData.me.lastName,
+        email: settingData.me.email,
+        bio: settingData.me.profile.bio,
+      });
+    }
+  }, [settingData]);
 
   const handleToggleEdit = () => {
     setToggleEdit((prev) => !prev);
@@ -86,12 +54,64 @@ export default function Setting() {
   const handleSave = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     console.log("save");
+    console.log(form);
+
     setToggleEdit((prev) => !prev);
   };
 
   if (!localStorage?.getItem("token")) {
     return <Navigate to="/signin" />;
   }
+
+  const FORMHTML = {
+    firstName: {
+      before: <Text fontWeight={"semibold"}>{form.firstName}</Text>,
+      after: (
+        <Input
+          id="first-name"
+          placeholder="First name"
+          value={form.firstName}
+          onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+        />
+      ),
+    },
+
+    lastName: {
+      before: <Text fontWeight={"semibold"}>{form.lastName}</Text>,
+      after: (
+        <Input
+          id="last-name"
+          placeholder="Last name"
+          value={form.lastName}
+          onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+        />
+      ),
+    },
+
+    email: {
+      before: <Text fontWeight={"semibold"}>{form.email}</Text>,
+      after: (
+        <Input
+          id="email"
+          placeholder="xxx@example.com"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+      ),
+    },
+
+    bio: {
+      before: <Text fontWeight={"semibold"}>{form.bio}</Text>,
+      after: (
+        <Textarea
+          id="bio"
+          placeholder="Tell us about yourself..."
+          value={form.bio}
+          onChange={(e) => setForm({ ...form, bio: e.target.value })}
+        />
+      ),
+    },
+  };
 
   return (
     <Container maxW={"7xl"} p="12" minH={"80vh"}>
@@ -109,7 +129,7 @@ export default function Setting() {
             border={"5px solid "}
             mx={"auto"}
             my={6}
-            src="https://100k-faces.glitch.me/random-image"
+            src={settingData?.me.profile.avatar.url}
           />
 
           <Flex>
