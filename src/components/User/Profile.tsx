@@ -133,10 +133,6 @@ export default function Profile() {
           {me.email}
         </Text>
 
-        <Text color={useColorModeValue("gray.600", "gray.400")} mb={4}>
-          Since: {new Date(me.createdAt).toLocaleDateString()}
-        </Text>
-
         <Text
           as="h2"
           fontSize="1.5rem"

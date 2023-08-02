@@ -239,3 +239,16 @@ export const DELETEPOST = gql`
     }
   }
 `;
+
+export const UPDATEUSER = gql`
+  mutation ($firstName: String!, $lastName: String!, $bio: String!) {
+    updateUser(firstName: $firstName, lastName: $lastName, bio: $bio) {
+      error {
+        message
+      }
+      profile {
+        bio
+      }
+    }
+  }
+`;

@@ -1,6 +1,6 @@
 /** @format */
 
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   ButtonGroup,
   Button,
@@ -17,22 +17,28 @@ import {
   Avatar,
   Text,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { GiCancel } from "react-icons/gi";
 import { Navigate } from "react-router-dom";
 import { GET_ME_SETTING } from "../../api/query";
-import { SettingType } from "../../api/types";
+import { SettingType, UpdateUserType } from "../../api/types";
+import { UPDATEUSER } from "../../api/mutation";
+import { toastToast } from "../Posts/Hooks/useToast";
 
 export default function Setting() {
   const { data: settingData } = useQuery<SettingType>(GET_ME_SETTING);
+  const [updateUser, { data: updateData }] =
+    useMutation<UpdateUserType>(UPDATEUSER);
+
+  const toast = useToast();
 
   const [toggleEdit, setToggleEdit] = React.useState(false);
   const [form, setForm] = React.useState({
     firstName: "",
     lastName: "",
-    email: "",
     bio: "",
   });
 
@@ -41,7 +47,6 @@ export default function Setting() {
       setForm({
         firstName: settingData.me.firstName,
         lastName: settingData.me.lastName,
-        email: settingData.me.email,
         bio: settingData.me.profile.bio,
       });
     }
@@ -53,11 +58,28 @@ export default function Setting() {
 
   const handleSave = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    console.log("save");
-    console.log(form);
+
+    updateUser({
+      variables: {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        bio: form.bio,
+      },
+    });
 
     setToggleEdit((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (updateData?.updateUser.profile) {
+      toastToast({
+        title: "Profile updated.",
+        description: "Your profile has been updated.",
+        status: "success",
+        toast,
+      });
+    }
+  }, [updateData?.updateUser.profile]);
 
   if (!localStorage?.getItem("token")) {
     return <Navigate to="/signin" />;
@@ -84,18 +106,6 @@ export default function Setting() {
           placeholder="Last name"
           value={form.lastName}
           onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-        />
-      ),
-    },
-
-    email: {
-      before: <Text fontWeight={"semibold"}>{form.email}</Text>,
-      after: (
-        <Input
-          id="email"
-          placeholder="xxx@example.com"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
       ),
     },
@@ -153,13 +163,6 @@ export default function Setting() {
           </Flex>
 
           <FormControl>
-            <FormLabel htmlFor="email" fontWeight={"normal"}>
-              Email
-            </FormLabel>
-            {toggleEdit ? FORMHTML.email.after : FORMHTML.email.before}
-          </FormControl>
-
-          <FormControl>
             <FormLabel htmlFor="bio" fontWeight={"normal"}>
               Bio
             </FormLabel>
@@ -190,14 +193,16 @@ export default function Setting() {
                 </Button>
               </HStack>
             ) : (
-              <Button
-                leftIcon={<AiFillEdit />}
-                colorScheme="teal"
-                variant="outline"
-                onClick={handleToggleEdit}
-              >
-                Edit
-              </Button>
+              <HStack justify={"space-between"} w={"full"}>
+                <Button
+                  leftIcon={<AiFillEdit />}
+                  colorScheme="teal"
+                  variant="outline"
+                  onClick={handleToggleEdit}
+                >
+                  Edit
+                </Button>
+              </HStack>
             )}
           </ButtonGroup>
         </SimpleGrid>

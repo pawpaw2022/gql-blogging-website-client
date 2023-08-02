@@ -220,3 +220,14 @@ export type DeletePostType = {
     post: PostType;
   };
 };
+
+export type UpdateUserType = {
+  updateUser: {
+    error: {
+      message: string;
+    };
+    profile: {
+      bio: string;
+    };
+  };
+};
