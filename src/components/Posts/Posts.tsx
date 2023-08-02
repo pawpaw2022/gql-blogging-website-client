@@ -7,10 +7,6 @@ import {
   useDisclosure,
   useToast,
   Box,
-  Text,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/react";
 import Post from "./Post";
 import { useMutation, useQuery } from "@apollo/client";
