@@ -18,20 +18,39 @@ import {
   Text,
   HStack,
   useToast,
+  Tooltip,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { GiCancel } from "react-icons/gi";
 import { Navigate } from "react-router-dom";
-import { GET_ME_SETTING } from "../../api/query";
-import { SettingType, UpdateUserType } from "../../api/types";
-import { UPDATEUSER } from "../../api/mutation";
+import { GET_ALL_AVATARS, GET_ME_SETTING } from "../../api/query";
+import {
+  AssignAvatarType,
+  AvatarsType,
+  SettingType,
+  UpdateUserType,
+} from "../../api/types";
+import { ASSIGNAVATAR, UPDATEUSER } from "../../api/mutation";
 import { toastToast } from "../Posts/Hooks/useToast";
 
 export default function Setting() {
   const { data: settingData } = useQuery<SettingType>(GET_ME_SETTING);
+  const { data: avatarData } = useQuery<AvatarsType>(GET_ALL_AVATARS);
+
   const [updateUser, { data: updateData }] =
     useMutation<UpdateUserType>(UPDATEUSER);
+
+  const [assignAvatar, { data: assignData }] =
+    useMutation<AssignAvatarType>(ASSIGNAVATAR);
 
   const toast = useToast();
 
@@ -40,7 +59,10 @@ export default function Setting() {
     firstName: "",
     lastName: "",
     bio: "",
+    avatarUrl: "",
   });
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     if (settingData) {
@@ -48,6 +70,7 @@ export default function Setting() {
         firstName: settingData.me.firstName,
         lastName: settingData.me.lastName,
         bio: settingData.me.profile.bio,
+        avatarUrl: settingData.me.profile.avatar.url,
       });
     }
   }, [settingData]);
@@ -69,6 +92,17 @@ export default function Setting() {
 
     setToggleEdit((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (assignData?.assignAvatar.profile) {
+      toastToast({
+        title: "Avatar changed.",
+        description: "Your avatar has been changed.",
+        status: "success",
+        toast,
+      });
+    }
+  }, [assignData?.assignAvatar]);
 
   useEffect(() => {
     if (updateData?.updateUser.profile) {
@@ -133,14 +167,24 @@ export default function Setting() {
           Edit your profile
         </Heading>
         <SimpleGrid columns={1} spacing={6} maxW={{ md: "60%", lg: "45%" }}>
-          <Avatar
-            borderRadius="full"
-            boxSize="150px"
-            border={"5px solid "}
-            mx={"auto"}
-            my={6}
-            src={settingData?.me.profile.avatar.url}
-          />
+          <Tooltip
+            hasArrow
+            placement="bottom-end"
+            label="Change your avatar!"
+            aria-label="A tooltip"
+          >
+            <Avatar
+              borderRadius="full"
+              boxSize="150px"
+              border={"5px solid "}
+              cursor={"pointer"}
+              mx={"auto"}
+              my={6}
+              name={settingData?.me.firstName + " " + settingData?.me.lastName}
+              onClick={onOpen}
+              src={form.avatarUrl}
+            />
+          </Tooltip>
 
           <Flex>
             <FormControl mr="5%">
@@ -207,6 +251,55 @@ export default function Setting() {
           </ButtonGroup>
         </SimpleGrid>
       </VStack>
+      <Modal
+        isCentered
+        isOpen={isOpen}
+        onClose={onClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Change your avatar</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <SimpleGrid columns={{ base: 3, md: 4 }} spacing={6}>
+              {avatarData?.avatars.map((avatar) => (
+                <Avatar
+                  key={avatar.id}
+                  w={"full"}
+                  h={"full"}
+                  cursor={"pointer"}
+                  src={avatar.url}
+                  onClick={() => {
+                    assignAvatar({
+                      variables: {
+                        avatarId: avatar.id,
+                      },
+                    });
+
+                    setForm({ ...form, avatarUrl: avatar.url });
+                    onClose();
+                  }}
+                />
+              ))}
+            </SimpleGrid>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme="teal"
+              onClick={() => {
+                onClose();
+              }}
+            >
+              Confirm
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }

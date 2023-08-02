@@ -204,3 +204,12 @@ export const GET_ME_SETTING = gql`
     }
   }
 `;
+
+export const GET_ALL_AVATARS = gql`
+  query {
+    avatars {
+      url
+      id
+    }
+  }
+`;

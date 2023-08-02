@@ -231,3 +231,21 @@ export type UpdateUserType = {
     };
   };
 };
+
+export type AvatarsType = {
+  avatars: {
+    url: string;
+    id: string;
+  }[];
+};
+
+export type AssignAvatarType = {
+  assignAvatar: {
+    error: {
+      message: string;
+    };
+    profile: {
+      id: string;
+    };
+  };
+};

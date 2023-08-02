@@ -252,3 +252,16 @@ export const UPDATEUSER = gql`
     }
   }
 `;
+
+export const ASSIGNAVATAR = gql`
+  mutation ($avatarId: ID!) {
+    assignAvatar(avatarId: $avatarId) {
+      error {
+        message
+      }
+      profile {
+        id
+      }
+    }
+  }
+`;
