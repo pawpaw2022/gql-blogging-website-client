@@ -20,6 +20,7 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
+
 import DarkModeToggle from "./DarkModeToggle";
 import { GET_ME_AVATAR } from "../../api/query";
 import { MeType } from "../../api/types";
