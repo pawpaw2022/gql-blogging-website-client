@@ -7,7 +7,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
 
 export default function AvatarOnNav() {
   const { isOpen, onToggle } = useDisclosure();
