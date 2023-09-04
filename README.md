@@ -2,6 +2,8 @@
 
 # Facebowl GraphQL Blogging Website (ClientSide)
 
+## [Facebowl Serverside](https://github.com/pawpaw2022/gql-blogging-website)
+
 ![Facebowl logo](./src/assets/logo.png)
 
 Welcome to Facebowl, a blogging website where users can create, view, update, and interact with posts and profiles. This React app is built using the latest technologies to provide a seamless and engaging user experience.
